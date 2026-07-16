@@ -5,10 +5,10 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.test-tmp/
 .coverage
 htmlcov/
 .mypy_cache/
 .ruff_cache/
 .env
 .DS_Store
-
