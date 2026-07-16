@@ -71,3 +71,17 @@ Source access must honor project permissions. Ingested content is untrusted inpu
 - Safety: documentation assistance without replacing competent-person authority
 - Commissioning: readiness, testing evidence, issues, and turnover
 
+## Document-ingestion pipeline
+
+The first implemented capability follows a framework- and model-independent pipeline:
+
+```text
+File -> LocalFileLoader -> PageExtractor -> ConservativeMetadataExtractor
+     -> DocumentPage records -> DeterministicTextChunker
+     -> JsonDocumentRepository -> future retrieval adapters
+```
+
+Each stage has a typed interface. The service composes the stages without depending on OpenAI, local inference, a vector database, or FastAPI. Source bytes are hashed before extraction. Document and chunk identities derive from stable source inputs, and chunks never span pages. Each chunk owns a `CitationReference` containing the source document name, page, optional sheet/specification metadata, chunk ID, and source location.
+
+The local JSON repository is an adapter, not a domain dependency. PostgreSQL, object storage, or vector indexing can be added later without changing extraction or chunking. See [`document-ingestion.md`](document-ingestion.md).
+

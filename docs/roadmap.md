@@ -14,7 +14,8 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 
 ## Project memory and document intelligence
 
-- Controlled document intake, versioning, metadata, and permissions
+- PDF, TXT, and Markdown intake with page-safe chunks and citations (foundation implemented)
+- Controlled versioning, richer metadata, and permissions
 - Parsing for drawings, specifications, RFIs, submittals, meeting minutes, and reports
 - Citation-aware indexing and retrieval
 - Evaluation datasets for retrieval quality and source fidelity

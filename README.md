@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository is currently at the **project-foundation stage**. It defines maintainable package boundaries and typed interfaces. It does not yet ingest documents, call an AI model, make recommendations, or automate construction processes.
+This repository includes Brunel's project foundation and its first functional capability: a local, deterministic document-ingestion pipeline. It does not yet provide question answering, production retrieval, OCR, or automated construction decisions.
 
 ## Product principles
 
@@ -67,3 +67,15 @@ Settings use `BRUNEL_*` environment variables. See `config/example.env`. Model a
 Keep domain modules independent. Depend on protocols in neighboring packages, inject adapters at `app/bootstrap.py`, add Pydantic models at boundaries, and include tests with every implementation. Architecture decisions that change a boundary should be recorded under `docs/decisions/`.
 
 See [vision](docs/vision.md), [roadmap](docs/roadmap.md), and [architecture](docs/architecture.md).
+
+## Document ingestion
+
+Brunel currently ingests PDF, UTF-8 TXT, and Markdown files. It validates and hashes the source, extracts page records, retains explicitly provided construction metadata, creates deterministic page-bound chunks, embeds a citation reference in each chunk, and stores the aggregate as local JSON.
+
+```powershell
+python -m app.cli ingest --project-id demo-project --file .\path\to\document.pdf
+```
+
+Optional metadata includes `--document-type`, `--title`, `--revision`, `--revision-date`, `--sheet-number`, and `--specification-section`. Generated records are written under `data/ingested/` by default and are ignored by Git. Set `BRUNEL_DATA_DIRECTORY` to choose another local data root.
+
+The current pipeline does not perform OCR. Image-only PDF pages are retained as empty page records with warnings so source page numbering is never lost. Drawing geometry, title-block interpretation, spreadsheets, schedules, and semantic retrieval are intentionally deferred. See [document ingestion](docs/document-ingestion.md) for the full design and limitations.

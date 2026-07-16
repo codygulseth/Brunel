@@ -11,4 +11,8 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 .env
+data/
+ingested_data/
+uploads/
+*.uploaded
 .DS_Store

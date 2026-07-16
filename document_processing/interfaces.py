@@ -1,30 +1,29 @@
-from datetime import datetime
+"""Replaceable interfaces for each document-ingestion stage."""
+
 from pathlib import Path
 from typing import Protocol
-from pydantic import BaseModel, ConfigDict, Field
-from models import DocumentId, ProjectId
+
+from .loaders import LoadedFile
+from .models import DocumentChunk, DocumentPage, FileType, IngestedDocument, SourceDocument
 
 
-class SourceDocument(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    id: DocumentId
-    project_id: ProjectId
-    path: Path
-    version: str = Field(min_length=1)
-    authored_at: datetime | None = None
+class FileLoader(Protocol):
+    def load(self, path: Path) -> LoadedFile: ...
 
 
-class ParsedDocument(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    source: SourceDocument
-    text: str
-    metadata: dict[str, str] = Field(default_factory=dict)
+class PageExtractor(Protocol):
+    file_type: FileType
+
+    def extract(self, loaded: LoadedFile, document_id: str) -> tuple[DocumentPage, ...]: ...
 
 
-class DocumentParser(Protocol):
-    async def supports(self, source: SourceDocument) -> bool: ...
-    async def parse(self, source: SourceDocument) -> ParsedDocument: ...
+class DocumentChunker(Protocol):
+    def chunk(
+        self, document: SourceDocument, pages: tuple[DocumentPage, ...]
+    ) -> tuple[DocumentChunk, ...]: ...
 
 
-# TODO(document-intelligence): add format-specific parsers behind DocumentParser.
-# TODO(drawing-intelligence): add sheet-aware geometry and callout contracts.
+class DocumentRepository(Protocol):
+    def save(self, ingested: IngestedDocument) -> Path: ...
+
+    def get(self, document_id: str) -> IngestedDocument | None: ...
