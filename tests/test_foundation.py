@@ -2,6 +2,7 @@ from uuid import uuid4
 import pytest
 from agents import AgentContext, AgentRegistry, AgentResult
 from app.bootstrap import create_application
+from config import PRODUCT_DESCRIPTION, PRODUCT_NAME
 from config.settings import LoggingSettings, Settings, get_settings
 from core.container import Container
 from rag import RetrievalQuery
@@ -38,9 +39,9 @@ def test_agent_registry_is_extensible_without_central_changes():
 
 
 def test_settings_load_environment(monkeypatch):
-    monkeypatch.setenv("CC_ENVIRONMENT", "test")
-    monkeypatch.setenv("CC_LOG_LEVEL", "debug")
-    monkeypatch.setenv("CC_LOG_JSON", "true")
+    monkeypatch.setenv("BRUNEL_ENVIRONMENT", "test")
+    monkeypatch.setenv("BRUNEL_LOG_LEVEL", "debug")
+    monkeypatch.setenv("BRUNEL_LOG_JSON", "true")
     get_settings.cache_clear()
     settings = get_settings()
     assert settings.environment == "test" and settings.logging == LoggingSettings(
@@ -54,6 +55,11 @@ def test_application_bootstraps_without_model_or_external_service():
     application = create_application(settings)
     assert application.settings.models.provider == "disabled"
     assert application.agents.names() == ()
+
+
+def test_product_identity_is_centralized():
+    assert PRODUCT_NAME == "Brunel"
+    assert PRODUCT_DESCRIPTION.startswith("An elite AI construction copilot")
 
 
 def test_retrieval_models_require_traceable_project_context():

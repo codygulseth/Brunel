@@ -1,4 +1,4 @@
-"""Deterministic orchestration contracts for construction processes."""
+"""Deterministic Brunel orchestration contracts for construction processes."""
 
 from .interfaces import Workflow, WorkflowContext, WorkflowResult
 

@@ -1,6 +1,6 @@
 def test_main_html_routes(client):
     for path in ["/","/organizations","/people","/responsibilities","/projects/1"]:
-        response=client.get(path);assert response.status_code==200;assert "AI Project Engineer" in response.text
+        response=client.get(path);assert response.status_code==200;assert "Brunel" in response.text
 
 def test_api_success_responses(client):
     assert len(client.get("/api/projects").json())==1
@@ -29,4 +29,3 @@ def test_post_endpoints(client):
     assert person.status_code==201
     resp=client.post("/api/projects/1/responsibilities",json={"organization_id":oid,"person_id":person.json()["id"],"category":"Coordination","description":"Test coordination","decision_authority":"Recorded test decisions","approval_authority":"None","source_type":"Manual Entry","source_reference":"Test fixture"})
     assert resp.status_code==201
-

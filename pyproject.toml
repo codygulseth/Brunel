@@ -3,9 +3,9 @@ requires = ["setuptools>=75"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "construction-copilot"
+name = "brunel"
 version = "0.1.0"
-description = "A modular AI operating-system foundation for commercial construction"
+description = "Brunel: an elite AI construction copilot"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi==0.116.1", "uvicorn[standard]==0.35.0", "sqlalchemy==2.0.41",

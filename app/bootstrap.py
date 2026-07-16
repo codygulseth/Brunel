@@ -1,4 +1,4 @@
-"""Construction Copilot composition root.
+"""Brunel composition root.
 
 FastAPI, CLI, and worker entry points should call :func:`create_application`
 instead of constructing infrastructure dependencies themselves.

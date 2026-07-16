@@ -1,4 +1,4 @@
-"""Shared domain value objects; feature-specific models stay in their modules."""
+"""Shared Brunel domain objects; feature-specific models stay in their modules."""
 
 from .common import Citation, DocumentId, ProjectId
 

@@ -1,6 +1,6 @@
-# Construction Copilot Vision
+# Brunel Vision
 
-Construction Copilot will become the world's best AI assistant for commercial-construction Project Engineers, Project Managers, Superintendents, and Owners.
+Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
 Its mission is to **automate administrative work, instantly retrieve project knowledge with citations, proactively identify risks, and help construction teams make better decisions.** It is an operating system for project knowledge and workflows, not a general-purpose chatbot.
 
@@ -13,7 +13,7 @@ Its mission is to **automate administrative work, instantly retrieve project kno
 
 ## Product boundaries
 
-Construction Copilot assists qualified people. It does not approve work, interpret a contract as legal advice, replace a licensed design professional, direct unsafe work, or silently send external communications. Authority remains with the people and organizations designated by project agreements and applicable law.
+Brunel assists qualified people. It does not approve work, interpret a contract as legal advice, replace a licensed design professional, direct unsafe work, or silently send external communications. Authority remains with the people and organizations designated by project agreements and applicable law.
 
 Useful responses must distinguish recorded facts, system inferences, and suggested actions. Project-specific factual claims should link to the evidence used. When evidence is missing, conflicting, superseded, or inaccessible, the system must say so.
 

@@ -1,8 +1,10 @@
 # Architecture
 
+Brunel is an elite AI construction copilot designed around evidence, modularity, and human authority.
+
 ## Approach
 
-Construction Copilot uses a modular monolith initially. Each capability owns a coherent contract and can evolve internally without forcing distributed-system complexity. Modules communicate through typed interfaces and Pydantic boundary models. Infrastructure and frameworks depend inward on these contracts.
+Brunel uses a modular monolith initially. Each capability owns a coherent contract and can evolve internally without forcing distributed-system complexity. Modules communicate through typed interfaces and Pydantic boundary models. Infrastructure and frameworks depend inward on these contracts.
 
 ```text
 Delivery adapters (future FastAPI, CLI, workers)

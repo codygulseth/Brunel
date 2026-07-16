@@ -1,4 +1,4 @@
-"""Retrieval contracts; provider and indexing implementations are intentionally deferred."""
+"""Brunel retrieval contracts; provider and indexing implementations are deferred."""
 
 from .interfaces import RetrievalQuery, RetrievalResult, Retriever
 

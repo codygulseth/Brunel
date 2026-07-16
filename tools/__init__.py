@@ -1,4 +1,4 @@
-"""Safe capabilities that workflows and future agents may invoke."""
+"""Safe capabilities that Brunel workflows and future agents may invoke."""
 
 from .interfaces import Tool, ToolContext, ToolResult
 

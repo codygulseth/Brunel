@@ -33,17 +33,17 @@ def _as_bool(value: str) -> bool:
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Load `CC_*` environment variables once per process."""
+    """Load `BRUNEL_*` environment variables once per process."""
     return Settings(
-        environment=os.getenv("CC_ENVIRONMENT", "development"),
-        data_directory=Path(os.getenv("CC_DATA_DIRECTORY", "data")),
+        environment=os.getenv("BRUNEL_ENVIRONMENT", "development"),
+        data_directory=Path(os.getenv("BRUNEL_DATA_DIRECTORY", "data")),
         logging=LoggingSettings(
-            level=os.getenv("CC_LOG_LEVEL", "INFO").upper(),
-            json_output=_as_bool(os.getenv("CC_LOG_JSON", "false")),
+            level=os.getenv("BRUNEL_LOG_LEVEL", "INFO").upper(),
+            json_output=_as_bool(os.getenv("BRUNEL_LOG_JSON", "false")),
         ),
         models=ModelSettings(
-            provider=os.getenv("CC_MODEL_PROVIDER", "disabled"),
-            model_name=os.getenv("CC_MODEL_NAME"),
-            base_url=os.getenv("CC_MODEL_BASE_URL"),
+            provider=os.getenv("BRUNEL_MODEL_PROVIDER", "disabled"),
+            model_name=os.getenv("BRUNEL_MODEL_NAME"),
+            base_url=os.getenv("BRUNEL_MODEL_BASE_URL"),
         ),
     )

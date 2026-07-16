@@ -1,6 +1,6 @@
-# Product Vision
+# Brunel Product Vision
 
-AI Project Engineer is an AI-assisted construction project-management tool optimized for data-center construction while keeping its core model useful for general commercial projects. The initial product is a deterministic registry that helps humans find the recorded owner of a decision, document, question, or action.
+Brunel is an elite AI construction copilot for commercial construction. The initial working prototype is a deterministic registry that helps humans find the recorded owner of a decision, document, question, or action, while the long-term platform expands into evidence-backed project knowledge and risk assistance.
 
 ## Product rules
 
@@ -14,4 +14,3 @@ AI Project Engineer is an AI-assisted construction project-management tool optim
 - Optimize for data-center construction while keeping the core model useful for general commercial construction.
 
 The registry records training data; it does not interpret contracts or assign real contractual authority.
-

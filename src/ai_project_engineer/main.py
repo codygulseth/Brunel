@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
+from config import PRODUCT_NAME
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -16,7 +17,7 @@ templates=Jinja2Templates(directory=BASE/"templates")
 async def lifespan(app):
     create_tables(); yield
 
-app=FastAPI(title="AI Project Engineer",version="0.1.0",lifespan=lifespan)
+app=FastAPI(title=PRODUCT_NAME,version="0.1.0",lifespan=lifespan)
 app.mount("/static",StaticFiles(directory=BASE/"static"),name="static")
 
 def project_or_404(db, project_id):
@@ -85,4 +86,3 @@ def api_responsibility(responsibility_id:int,db:Session=Depends(get_db)):
     item=db.get(models.Responsibility,responsibility_id)
     if not item:raise HTTPException(404,"Responsibility not found")
     return item
-

@@ -1,5 +1,7 @@
 # Product Roadmap
 
+This roadmap advances Brunel from a reliable software foundation to an evidence-grounded construction operating system.
+
 The roadmap is capability-driven. Dates and priorities will be validated with construction users before implementation.
 
 ## Foundation — current

@@ -1,4 +1,4 @@
-"""Persistence interfaces; infrastructure implementations belong in subpackages."""
+"""Brunel persistence interfaces; implementations belong in infrastructure adapters."""
 
 from .interfaces import ProjectRecord, ProjectRepository
 
