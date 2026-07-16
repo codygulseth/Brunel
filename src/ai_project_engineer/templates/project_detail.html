@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<h1>{{project.name}}</h1><div class="panel"><dl><dt>Project number</dt><dd>{{project.project_number}}</dd><dt>Type</dt><dd>{{project.project_type}}</dd><dt>Location</dt><dd>{{project.location}}</dd><dt>Phase</dt><dd>{{project.current_phase.value}}</dd><dt>Dates</dt><dd>{{project.start_date}} — {{project.target_completion_date}}</dd></dl><p>{{project.description}}</p></div>{% endblock %}
+
