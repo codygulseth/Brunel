@@ -440,6 +440,21 @@ def test_api_openapi_cli_demo_and_no_model_default(tmp_path: Path, monkeypatch, 
         == 0
     )
     assert "Created SUB-001" in capsys.readouterr().out
+    assert (
+        main(
+            [
+                "ask",
+                "--project-id",
+                "api-project",
+                "--question",
+                "Is SUB-001 released for procurement?",
+            ]
+        )
+        == 0
+    )
+    assert "Evidence type: cited specification, project record, and official response" in (
+        capsys.readouterr().out
+    )
     result = run_synthetic_submittal_demo(tmp_path / "demo-data", "demo-project")
     assert result["candidate_count"] == 5
     assert result["official_disposition"] == "approved_as_noted"

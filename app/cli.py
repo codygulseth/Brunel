@@ -234,6 +234,7 @@ def _run_ask(
         "product data",
         "approved package",
         "procurement release",
+        "released for procurement",
     )
     if any(term in args.question.casefold() for term in submittal_terms):
         submittal_answer = SubmittalQuestionService(
