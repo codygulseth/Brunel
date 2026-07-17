@@ -29,6 +29,11 @@ from app.submittal_cli import (
     register_submittal_commands,
     run_submittal_command,
 )
+from app.submittal_attachment_cli import (
+    COMMANDS as SUBMITTAL_ATTACHMENT_COMMANDS,
+    register_submittal_attachment_commands,
+    run_submittal_attachment_command,
+)
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -108,6 +113,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_change_commands(commands)
     register_rfi_commands(commands)
     register_submittal_commands(commands)
+    register_submittal_attachment_commands(commands)
     return parser
 
 
@@ -134,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_rfi_command(args, settings)
     if args.command in SUBMITTAL_COMMANDS:
         return run_submittal_command(args, settings)
+    if args.command in SUBMITTAL_ATTACHMENT_COMMANDS:
+        return run_submittal_attachment_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":

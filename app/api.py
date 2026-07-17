@@ -34,14 +34,16 @@ from submittal.errors import SubmittalError, SubmittalNotFoundError
 from storage import JsonDocumentRepository
 from app.rfi_api import router as rfi_router
 from app.submittal_api import router as submittal_router
+from app.submittal_attachment_api import router as submittal_attachment_router
 
 app = FastAPI(
     title="Brunel Development API",
-    version="0.4.0",
+    version="0.5.0",
     description="Development-only API. Authentication and authorization are not implemented.",
 )
 app.include_router(rfi_router)
 app.include_router(submittal_router)
+app.include_router(submittal_attachment_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:

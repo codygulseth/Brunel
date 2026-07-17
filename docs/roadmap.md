@@ -20,6 +20,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 - Operational revision review with materiality admission, assignments, audit, dashboards, draft workflow links, local notification outbox, and development API (foundation implemented)
 - Evidence-backed RFI drafting, numbering, review/revisions, official responses, potential impacts, audit, logs/dashboard, API/CLI, and operational Q&A (foundation implemented)
 - Evidence-backed submittal requirement extraction/admission, register and package revisions, completeness and review, official dispositions, resubmittals, procurement planning, audit, API/CLI, and operational Q&A (foundation implemented)
+- Immutable submittal attachment revisions, canonical content ingestion, readability/classification/extraction, cited evidence sets, deterministic proposed compliance mappings, human confirmation, staleness, package comparison, API/CLI, exports, and cited Q&A (foundation implemented)
 - Controlled permissions, richer family management, and stale-comparison refresh workflows
 - Parsing for drawings, specifications, RFIs, submittals, meeting minutes, and reports
 - Citation-aware indexing and retrieval
@@ -29,7 +30,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 
 - Construction QA evaluations and richer cited cross-document questions
 - External RFI document-control adapters and richer approval policies
-- External submittal document-control adapters, attachment parsing, and richer approval policies
+- External submittal document-control adapters, OCR/table extraction, and richer approval policies
 - Meeting-action and daily-report administration
 - Drawing and specification intelligence
 - Schedule and procurement intelligence

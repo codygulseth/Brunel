@@ -20,3 +20,15 @@ class SubmittalConcurrencyError(SubmittalError):
 
 class SubmittalPersistenceError(SubmittalError):
     pass
+
+
+class AttachmentIngestionError(SubmittalError):
+    pass
+
+
+class AttachmentSecurityError(AttachmentIngestionError):
+    pass
+
+
+class AttachmentUnsupportedError(AttachmentIngestionError):
+    pass

@@ -17,3 +17,9 @@ RFI routes delegate all lifecycle rules to `RFIService`. HTTP 404 represents a m
 Project-scoped routes cover specification requirement extraction and candidate review; register creation, listing, retrieval, assignment, procurement dates, and controlled transitions; package creation, completeness, internal review, issue, official/informal responses, conservative response analysis, resubmittals, and staleness; human procurement release; and logs, dashboard, audit, export, and operational Q&A.
 
 All workflow rules remain in `SubmittalService`. Missing records return 404, lifecycle conflicts return 409, and malformed requests return 422. Citation output keeps document/page/chunk identity but strips `source_location`. The API never uploads a package externally, sends a notification, calls a model by default, determines technical compliance, or releases procurement automatically. See [Submittal automation](submittal-automation.md).
+
+## Submittal attachment intelligence routes
+
+Project-scoped package routes register/list attachments, run attachment analysis, summarize evidence, list and review proposed compliance mappings, compare package revisions, check/acknowledge staleness, and read attachment audit history. Project attachment routes retrieve immutable metadata/extractions, search cited content, and answer cited questions.
+
+`POST /projects/{project_id}/submittal-packages/{package_id}/attachments` accepts an allowed local input path in this development adapter; it is not an Internet upload endpoint. API serialization strips `storage_reference`, `source_path`, and `source_location`. Content analysis is deterministic and local by default. See [Submittal Attachment Intelligence](submittal-attachment-intelligence.md).

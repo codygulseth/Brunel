@@ -91,6 +91,10 @@ The current local service always works deterministically. Enabling the model fla
 | `BRUNEL_SUBMITTAL_DUE_SOON_DAYS` | `7` | Local deadline-notification horizon |
 | `BRUNEL_SUBMITTAL_CALENDAR_MODE` | `calendar_days` | Deterministic date-calculation basis |
 | `BRUNEL_SUBMITTAL_EXPORT_DIRECTORY` | `reports/submittals` | Ignored generated export root |
+| `BRUNEL_SUBMITTAL_ATTACHMENT_DIRECTORY` | `attachment-files` | Immutable local binary root below the data directory |
+| `BRUNEL_SUBMITTAL_ATTACHMENT_MAX_BYTES` | `52428800` | Maximum accepted attachment size |
+| `BRUNEL_SUBMITTAL_ATTACHMENT_EXTRACTOR_VERSION` | `attachment-extractor-v1` | Recorded extraction policy identity |
+| `BRUNEL_SUBMITTAL_ATTACHMENT_MAPPING_POLICY` | `deterministic-cited-mapping-v1` | Recorded mapping policy identity |
 
 Submittal extraction and completeness run deterministically without a model. Setting the assistance flag alone cannot call an external provider; composition must also inject one. Notifications are local outbox records, and procurement release always requires a human service action.
 

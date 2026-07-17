@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, Revision Intelligence, operational project-change review, evidence-backed RFI automation, and evidence-backed submittal automation. It does not yet provide OCR, drawing vision, production vector retrieval, external document-control integration, or automated construction decisions.
+This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, Revision Intelligence, operational project-change review, evidence-backed RFI automation, submittal automation, and cited submittal attachment intelligence. It does not yet provide OCR, drawing vision, production vector retrieval, external document-control integration, or automated construction decisions.
 
 ## Product principles
 
@@ -26,7 +26,7 @@ rag/                   Citation-aware retrieval contracts
 revision_intelligence/ Revision lineage, alignment, diffing, classification, reports
 change_workflow/       Assignable, auditable project change review and resolution
 rfi/                   Evidence-backed RFI drafting, review, response, logs, and audit
-submittal/             Cited requirements, register, packages, reviews, responses, procurement
+submittal/             Requirements, packages, attachment evidence, reviews, responses, procurement
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -129,3 +129,16 @@ RFIs are internal records only. Drafts require human approval, official response
 Brunel can extract cited submittal requirements from project specifications, route human admission decisions into a project-scoped register, assemble immutable package revisions, block incomplete packages, require internal approval before issue, record official design-team dispositions separately from internal notes and Brunel inference, manage revise-and-resubmit history, calculate deterministic procurement planning dates, and require human procurement release.
 
 The module also provides audit history, local notifications, logs, dashboards, Markdown/JSON/CSV output, FastAPI routes, CLI commands, RFI/project-change links, staleness handling, and cited operational Q&A. It does not determine technical compliance or contact external systems. See [Submittal automation](docs/submittal-automation.md).
+
+## Submittal attachment intelligence
+
+Brunel can register immutable attachment revisions, route supported PDF/TXT/Markdown content through canonical ingestion, assess readability, classify submitted document types, extract cited product identities and technical attributes, flag duplicate/missing/mismatched/conflicting evidence, and generate deterministic proposed requirement mappings. Every proposal remains a human-review state; it never becomes an official disposition or professional design-compliance finding automatically.
+
+```powershell
+python -m app.cli submittal-attachment-add --project-id demo-project --package-id package-id --file .\product-data.pdf --declared-type product_data
+python -m app.cli submittal-attachment-analyze --project-id demo-project --package-id package-id
+python -m app.cli submittal-attachment-ask --project-id demo-project --package-id package-id --question "What model and short-circuit rating were submitted?"
+python -m app.cli submittal-attachment-demo --project-id synthetic-attachment-demo
+```
+
+The synthetic demo creates only generated switchboard text under the ignored data directory and performs no model calls, external notifications, uploads, procurement actions, schedule changes, or approvals. See [Submittal Attachment Intelligence](docs/submittal-attachment-intelligence.md).

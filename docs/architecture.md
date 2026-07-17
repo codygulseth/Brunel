@@ -30,7 +30,7 @@ Delivery adapters (future FastAPI, CLI, workers)
 - `revision_intelligence` owns lineage, comparability, normalization, alignment, token diffs, explainable classification, significance, saved findings, and rendering.
 - `change_workflow` owns operational admission, assignments, transitions, dispositions, notes, links, draft actions, audit, dashboard, staleness orchestration, notifications, and operational Q&A.
 - `rfi` owns canonical RFI numbering, evidence-backed drafting, validation, duplicate indicators, review/revisions, responses, impact records, reporting, audit, and operational Q&A.
-- `submittal` owns cited requirement extraction/admission, register numbering, immutable packages, completeness matrices, reviews, official dispositions, resubmittals, procurement planning, staleness, reporting, audit, and operational Q&A.
+- `submittal` owns cited requirement extraction/admission, register numbering, immutable packages and attachment revisions, attachment content evidence, proposed compliance mappings, completeness matrices, reviews, official dispositions, resubmittals, procurement planning, staleness, reporting, audit, and operational Q&A.
 - `agents` defines narrow assistant behavior and a registry. An agent depends on interfaces, not concrete providers.
 - `tools` defines explicitly bounded capabilities. Side-effecting tools will require authorization and audit records.
 - `workflows` coordinates deterministic, reviewable processes. It is preferred over agent autonomy for known construction processes.
@@ -143,4 +143,18 @@ Ingested specification -> deterministic cited candidates -> human admission
 ```
 
 The `submittal` module reads document aggregates through a repository adapter and integrates with project changes, RFIs, and the local notification outbox at service boundaries. Completeness is content-presence validation, never technical compliance. Informal responses, official responses, and Brunel analysis are separate types and states. Schedule links are references only, and procurement release is always human-controlled. Generic `WorkflowType.SUBMITTAL` related items remain compatibility pointers; canonical lifecycle data lives in `submittal`. See [`submittal-automation.md`](submittal-automation.md).
+
+## Submittal attachment intelligence boundary
+
+```text
+Local attachment -> security/hash/immutable revision -> canonical document ingestion
+  -> readability + deterministic classification/extraction + exact chunk citations
+  -> package evidence set -> missing/mismatch/conflict/deviation indicators
+  -> proposed requirement mappings -> explicit human confirmation
+  -> package staleness + revision comparison + cited search/Q&A/export
+```
+
+Attachment binaries are owned by a replaceable `AttachmentFileStore`; local JSON stores only domain metadata, lineage, extraction results, evidence sets, reviews, comparisons, and audit references. Supported content is not parsed through a competing pipeline: PDF, TXT, and Markdown reuse `DocumentIngestionService` and `JsonDocumentRepository`. Unsupported allowed formats remain metadata-only unresolved evidence and cannot satisfy a mapping.
+
+Evidence sets are immutable snapshots keyed by attachment hashes, extraction identities, requirement identities, and versioned policies. Proposed mappings distinguish specification citations from submitted-attachment citations and stay `unreviewed`, `confirmed`, `modified`, `rejected`, or `needs_information`. Later evidence changes preserve prior official dispositions while invalidating internal review currency when applicable. See [`submittal-attachment-intelligence.md`](submittal-attachment-intelligence.md).
 

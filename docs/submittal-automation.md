@@ -58,6 +58,8 @@ The canonical `submittal.SubmittalRegisterItem` and `SubmittalPackage` models re
 - No authentication, authorization, distributed database locking, or production tenant isolation.
 - No Procore, Autodesk Construction Cloud, email, or external notification delivery.
 - No automatic procurement action or schedule mutation.
-- No attachment file parsing, PDF form generation, drawing vision, or technical compliance determination.
+- Text-bearing PDF, TXT, and Markdown attachments have deterministic content intelligence; Office files and images remain metadata-only, and there is no OCR, PDF form generation, drawing vision, or technical compliance determination.
 - Deterministic extraction targets explicit text requirements; implicit, tabular, image-only, and cross-referenced requirements need human review.
 - Optional model assistance has an interface but no provider is enabled by default.
+
+Detailed attachment lineage, evidence mapping, comparison, search, and review behavior is documented in [Submittal Attachment Intelligence](submittal-attachment-intelligence.md).

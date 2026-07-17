@@ -83,6 +83,10 @@ class SubmittalSettings(BaseModel):
     due_soon_days: int = Field(default=7, ge=1, le=90)
     calendar_mode: str = "calendar_days"
     exports_directory: Path = Path("reports/submittals")
+    attachment_storage_directory: Path = Path("attachment-files")
+    attachment_max_file_size: int = Field(default=50 * 1024 * 1024, ge=1)
+    attachment_extractor_version: str = "attachment-extractor-v1"
+    attachment_mapping_policy: str = "deterministic-cited-mapping-v1"
 
 
 class Settings(BaseModel):
@@ -190,6 +194,19 @@ def get_settings() -> Settings:
             calendar_mode=os.getenv("BRUNEL_SUBMITTAL_CALENDAR_MODE", "calendar_days"),
             exports_directory=Path(
                 os.getenv("BRUNEL_SUBMITTAL_EXPORT_DIRECTORY", "reports/submittals")
+            ),
+            attachment_storage_directory=Path(
+                os.getenv("BRUNEL_SUBMITTAL_ATTACHMENT_DIRECTORY", "attachment-files")
+            ),
+            attachment_max_file_size=int(
+                os.getenv("BRUNEL_SUBMITTAL_ATTACHMENT_MAX_BYTES", str(50 * 1024 * 1024))
+            ),
+            attachment_extractor_version=os.getenv(
+                "BRUNEL_SUBMITTAL_ATTACHMENT_EXTRACTOR_VERSION", "attachment-extractor-v1"
+            ),
+            attachment_mapping_policy=os.getenv(
+                "BRUNEL_SUBMITTAL_ATTACHMENT_MAPPING_POLICY",
+                "deterministic-cited-mapping-v1",
             ),
         ),
     )
