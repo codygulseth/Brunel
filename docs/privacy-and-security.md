@@ -5,3 +5,5 @@ Brunel treats documents, comparisons, and workflow records as confidential proje
 Repositories validate record identifiers, use atomic replacement, enforce project scoping, and keep generated data under ignored data roots. Workflow URLs accept HTTP(S) only. API pagination is bounded. Audit events are append-only through normal services and avoid source excerpts.
 
 The development API has no authentication or authorization and must remain local. Production deployment requires identity, role- and project-based authorization, encrypted transport/storage, secrets management, retention policies, audit export controls, abuse protection, and security review.
+
+RFI records may contain contract-sensitive questions and responses. HTTP serialization removes local filesystem source paths, notification payloads exclude evidence excerpts and response text, and generated forms/logs stay in ignored report directories. Official-response labels are explicit; Brunel does not convert internal notes into contract documents or send them to recipients. External model assistance is disabled by default and deterministic drafting requires no network.

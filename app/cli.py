@@ -23,6 +23,7 @@ from rag import (
 from rag.interfaces import GroundedAnswerProvider
 from storage import JsonDocumentRepository
 from app.change_cli import COMMANDS as CHANGE_COMMANDS, register_change_commands, run_change_command
+from app.rfi_cli import COMMANDS as RFI_COMMANDS, register_rfi_commands, run_rfi_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -33,6 +34,8 @@ from revision_intelligence.rendering import MarkdownComparisonRenderer
 from revision_intelligence.repository import JsonComparisonRepository
 from revision_intelligence.qa import ComparisonQuestionAnsweringService
 from revision_intelligence.service import RevisionComparisonService
+from rfi.qa import RFIQuestionService
+from rfi.repository import JsonRFIRepository
 
 logger = logging.getLogger(__name__)
 
@@ -96,6 +99,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     review.add_argument("--note")
     register_change_commands(commands)
+    register_rfi_commands(commands)
     return parser
 
 
@@ -118,6 +122,8 @@ def main(argv: list[str] | None = None) -> int:
     workflow_repository = JsonChangeWorkflowRepository(settings.data_directory / "change-workflow")
     if args.command in CHANGE_COMMANDS:
         return run_change_command(args, settings)
+    if args.command in RFI_COMMANDS:
+        return run_rfi_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
@@ -212,6 +218,22 @@ def _run_ask(
     comparisons: JsonComparisonRepository | None = None,
     workflow: JsonChangeWorkflowRepository | None = None,
 ) -> int:
+    rfi_terms = ("rfi", "request for information", "architect answered", "engineer confirm")
+    if any(term in args.question.casefold() for term in rfi_terms):
+        rfi_answer = RFIQuestionService(JsonRFIRepository(settings.data_directory / "rfi")).answer(
+            args.project_id, args.question
+        )
+        if rfi_answer.sufficient:
+            print(f"Answer: {rfi_answer.answer}")
+            print("Status: answered")
+            print("Evidence type: RFI record with source-document/official-response distinctions")
+            for rfi_citation in rfi_answer.citations:
+                print(
+                    f"Source: {rfi_citation.citation.document_name} "
+                    f"(page {rfi_citation.citation.page_number}, "
+                    f"chunk {rfi_citation.citation.chunk_id})"
+                )
+            return 0
     operational_terms = (
         "assigned",
         "reviewing",

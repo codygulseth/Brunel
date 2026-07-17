@@ -62,6 +62,17 @@ class WorkflowSettings(BaseModel):
     legacy_compatibility: bool = True
 
 
+class RFISettings(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    numbering_prefix: str = "RFI"
+    numbering_digits: int = Field(default=3, ge=2, le=8)
+    assign_number_at_creation: bool = True
+    model_assistance_enabled: bool = False
+    duplicate_similarity_threshold: float = Field(default=0.72, ge=0, le=1)
+    default_required_days: int = Field(default=10, ge=1, le=180)
+    exports_directory: Path = Path("reports/rfis")
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(frozen=True)
     environment: str = "development"
@@ -72,6 +83,7 @@ class Settings(BaseModel):
     answers: AnswerSettings = AnswerSettings()
     revisions: RevisionSettings = RevisionSettings()
     workflow: WorkflowSettings = WorkflowSettings()
+    rfi: RFISettings = RFISettings()
 
 
 def _as_bool(value: str) -> bool:
@@ -139,5 +151,16 @@ def get_settings() -> Settings:
             api_port=int(os.getenv("BRUNEL_API_PORT", "8001")),
             api_page_limit=int(os.getenv("BRUNEL_API_PAGE_LIMIT", "50")),
             legacy_compatibility=_as_bool(os.getenv("BRUNEL_LEGACY_COMPATIBILITY", "true")),
+        ),
+        rfi=RFISettings(
+            numbering_prefix=os.getenv("BRUNEL_RFI_NUMBER_PREFIX", "RFI"),
+            numbering_digits=int(os.getenv("BRUNEL_RFI_NUMBER_DIGITS", "3")),
+            assign_number_at_creation=_as_bool(os.getenv("BRUNEL_RFI_NUMBER_AT_CREATION", "true")),
+            model_assistance_enabled=_as_bool(os.getenv("BRUNEL_RFI_MODEL_ASSISTANCE", "false")),
+            duplicate_similarity_threshold=float(
+                os.getenv("BRUNEL_RFI_DUPLICATE_THRESHOLD", "0.72")
+            ),
+            default_required_days=int(os.getenv("BRUNEL_RFI_DEFAULT_REQUIRED_DAYS", "10")),
+            exports_directory=Path(os.getenv("BRUNEL_RFI_EXPORT_DIRECTORY", "reports/rfis")),
         ),
     )

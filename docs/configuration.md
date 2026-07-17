@@ -65,3 +65,17 @@ Comparison is local by default. `--use-model` sends no content in this version; 
 | `BRUNEL_API_PAGE_LIMIT` | `50` | Default bounded list size |
 | `BRUNEL_LEGACY_COMPATIBILITY` | `true` | Retain deprecated prototype compatibility |
 
+## RFI automation
+
+| Variable | Default | Purpose |
+| --- | ---: | --- |
+| `BRUNEL_RFI_NUMBER_PREFIX` | `RFI` | Project RFI numbering prefix |
+| `BRUNEL_RFI_NUMBER_DIGITS` | `3` | Zero-padded sequence width |
+| `BRUNEL_RFI_NUMBER_AT_CREATION` | `true` | Reserve numbers when drafts are created |
+| `BRUNEL_RFI_MODEL_ASSISTANCE` | `false` | Allow an explicitly injected optional draft provider |
+| `BRUNEL_RFI_DUPLICATE_THRESHOLD` | `0.72` | Similar-question review indicator threshold |
+| `BRUNEL_RFI_DEFAULT_REQUIRED_DAYS` | `10` | Delivery-adapter default response interval |
+| `BRUNEL_RFI_EXPORT_DIRECTORY` | `reports/rfis` | Ignored generated export root |
+
+The current local service always works deterministically. Enabling the model flag alone does not configure or call a provider; a provider must be explicitly injected at composition time. Notifications remain local outbox records even when `BRUNEL_NOTIFICATION_OUTBOX=true`.
+

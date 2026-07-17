@@ -29,13 +29,16 @@ from config import get_settings
 from revision_intelligence.repository import JsonComparisonRepository
 from revision_intelligence.models import ComparisonRequest
 from revision_intelligence.service import RevisionComparisonService
+from rfi.errors import RFIError, RFINotFoundError
 from storage import JsonDocumentRepository
+from app.rfi_api import router as rfi_router
 
 app = FastAPI(
     title="Brunel Revision Review API",
     version="0.2.0",
     description="Development-only API. Authentication and authorization are not implemented.",
 )
+app.include_router(rfi_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:
@@ -125,6 +128,14 @@ async def correlation_id(request: Request, call_next):
 @app.exception_handler(ChangeWorkflowError)
 async def workflow_error(_: Request, exc: ChangeWorkflowError):
     status = 404 if isinstance(exc, ChangeNotFoundError) else 409
+    return __import__("fastapi").responses.JSONResponse(
+        status_code=status, content={"detail": str(exc)}
+    )
+
+
+@app.exception_handler(RFIError)
+async def rfi_error(_: Request, exc: RFIError):
+    status = 404 if isinstance(exc, RFINotFoundError) else 409
     return __import__("fastapi").responses.JSONResponse(
         status_code=status, content={"detail": str(exc)}
     )

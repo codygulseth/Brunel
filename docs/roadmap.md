@@ -18,6 +18,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 - Project-scoped local retrieval and citation-validated question answering (baseline implemented)
 - Text-based Revision Intelligence with lineage, deterministic diffs, citations, review state, Markdown reports, and comparison-aware QA (foundation implemented)
 - Operational revision review with materiality admission, assignments, audit, dashboards, draft workflow links, local notification outbox, and development API (foundation implemented)
+- Evidence-backed RFI drafting, numbering, review/revisions, official responses, potential impacts, audit, logs/dashboard, API/CLI, and operational Q&A (foundation implemented)
 - Controlled permissions, richer family management, and stale-comparison refresh workflows
 - Parsing for drawings, specifications, RFIs, submittals, meeting minutes, and reports
 - Citation-aware indexing and retrieval
@@ -26,7 +27,8 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 ## Construction workflows
 
 - Construction QA evaluations and richer cited cross-document questions
-- RFI, submittal, meeting-action, and daily-report administration
+- External RFI document-control adapters and richer approval policies
+- Submittal, meeting-action, and daily-report administration
 - Drawing and specification intelligence
 - Schedule and procurement intelligence
 - Risk signals with evidence, confidence, and human disposition

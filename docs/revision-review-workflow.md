@@ -23,6 +23,8 @@ Dispositions are independent of status. Cost, schedule, and scope certainty rema
 
 Generic links cover RFIs, submittals, procurement items, schedule activities, owner decisions, change events/orders, quality, safety, commissioning, field issues, and external references. URLs accept only HTTP(S). Minimal internal related records are drafts, preserve source evidence, create an automatic workflow link, and are idempotent. They do not create external RFIs, submittals, or messages.
 
+The `rfi` package now replaces the generic RFI draft as the canonical lifecycle record. Existing generic related-item IDs remain compatibility pointers and are retained on migrated/new canonical RFIs when available. Drafting from a project change creates a bidirectional link, preserves original evidence, and records `requires_rfi`; resolving the change and closing the RFI remain separate human actions. See [RFI automation](rfi-automation.md).
+
 ## Dashboard, staleness, and Q&A
 
 The dashboard reports open, unreviewed, assigned, overdue, high-priority, needs-information, resolved, closed, stale, and due-soon counts. Queue ranking is deterministic: priority, due date, update time, then stable ID. It is a review ordering, not a calibrated risk score.

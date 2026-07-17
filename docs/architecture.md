@@ -29,6 +29,7 @@ Delivery adapters (future FastAPI, CLI, workers)
 - `rag` defines citation-aware retrieval without choosing a vector database or model.
 - `revision_intelligence` owns lineage, comparability, normalization, alignment, token diffs, explainable classification, significance, saved findings, and rendering.
 - `change_workflow` owns operational admission, assignments, transitions, dispositions, notes, links, draft actions, audit, dashboard, staleness orchestration, notifications, and operational Q&A.
+- `rfi` owns canonical RFI numbering, evidence-backed drafting, validation, duplicate indicators, review/revisions, responses, impact records, reporting, audit, and operational Q&A.
 - `agents` defines narrow assistant behavior and a registry. An agent depends on interfaces, not concrete providers.
 - `tools` defines explicitly bounded capabilities. Side-effecting tools will require authorization and audit records.
 - `workflows` coordinates deterministic, reviewable processes. It is preferred over agent autonomy for known construction processes.
@@ -117,4 +118,17 @@ Old revision + New revision
 Comparison services depend on repository protocols. Exact source excerpts remain separate from normalized matching text. External analysis cannot replace deterministic findings or source citations.
 
 Revision comparison remains independent from operational review. `ProjectChangeService` consumes saved comparison models through an application boundary; Revision Intelligence does not import the workflow package. `app.api` and `app.change_cli` are thin adapters over canonical services. The legacy `src/ai_project_engineer` application is an isolated deprecated compatibility path under [ADR 0002](decisions/0002-isolate-legacy-project-engineer.md).
+
+## RFI workflow boundary
+
+```text
+Revision finding -> ProjectChange -> deterministic RFI draft + source citations
+                                      -> quality/duplicate assessment
+                                      -> internal review + immutable revisions
+                                      -> explicit issue + official response
+                                      -> conservative impact analysis
+                                      -> human project-change resolution + RFI closure
+```
+
+`rfi` uses the existing project-change repository only at an application-service integration boundary for bidirectional links, dispositions, closure checks, and the local notification outbox. It does not mutate Revision Intelligence. The generic legacy RFI related item is retained only as a traceable compatibility pointer; `rfi.RFI` is canonical. HTTP and CLI adapters remain thin, and provider failures retain deterministic output. See [`rfi-automation.md`](rfi-automation.md).
 

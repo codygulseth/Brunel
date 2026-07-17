@@ -74,6 +74,7 @@ class ImpactCertainty(StrEnum):
     LIKELY = "likely"
     POSSIBLE = "possible"
     UNKNOWN = "unknown"
+    NOT_APPLICABLE = "not_applicable"
 
 
 class WorkflowType(StrEnum):

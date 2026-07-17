@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, and Revision Intelligence for evidence-backed text revision comparison. It does not yet provide OCR, drawing vision, production vector retrieval, or automated construction decisions.
+This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, Revision Intelligence, operational project-change review, and evidence-backed RFI automation. It does not yet provide OCR, drawing vision, production vector retrieval, external document-control integration, or automated construction decisions.
 
 ## Product principles
 
@@ -25,6 +25,7 @@ document_processing/  Document intake and parsing contracts
 rag/                   Citation-aware retrieval contracts
 revision_intelligence/ Revision lineage, alignment, diffing, classification, reports
 change_workflow/       Assignable, auditable project change review and resolution
+rfi/                   Evidence-backed RFI drafting, review, response, logs, and audit
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -35,7 +36,7 @@ tests/                 Unit, contract, and legacy prototype tests
 docs/                  Vision, roadmap, and architecture
 ```
 
-The earlier Project Organization and Responsibility Registry remains available under `src/ai_project_engineer/` as a working prototype. Future feature migration should happen deliberately, module by module.
+The earlier `src/ai_project_engineer` prototype is isolated as deprecated compatibility code under ADR 0002. Canonical capabilities live in the top-level modules and do not import it.
 
 ## Local setup (Windows PowerShell)
 
@@ -115,3 +116,9 @@ The pipeline preserves exact old/new excerpts and page/chunk citations, flags co
 ## Revision review workflow
 
 Material revision findings can enter an idempotent project change register, receive assignments and due dates, move through validated review states, retain dispositions and append-only notes, create minimal linked draft actions, and remain traceable through audit history to original evidence. A project dashboard prioritizes open, overdue, high-priority, and stale-source changes. See [revision review workflow](docs/revision-review-workflow.md) and the [development API](docs/api.md).
+
+## RFI automation
+
+Project changes can now generate canonical, project-scoped RFI drafts that preserve their original citations. Brunel provides deterministic drafting and quality checks, duplicate indicators, sequential numbering, internal review and immutable text revisions, explicit official responses, conservative response analysis, human-confirmed impact records, logs, dashboards, audit history, a local notification outbox, FastAPI routes, CLI workflows, and operational RFI Q&A.
+
+RFIs are internal records only. Drafts require human approval, official responses must be explicitly identified, and Brunel never confirms cost or schedule impact automatically. No email or external document-control action occurs. See [RFI automation](docs/rfi-automation.md).
