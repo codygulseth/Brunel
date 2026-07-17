@@ -35,6 +35,7 @@ from storage import JsonDocumentRepository
 from app.rfi_api import router as rfi_router
 from app.submittal_api import router as submittal_router
 from app.submittal_attachment_api import router as submittal_attachment_router
+from app.drawing_api import router as drawing_router
 
 app = FastAPI(
     title="Brunel Development API",
@@ -44,6 +45,7 @@ app = FastAPI(
 app.include_router(rfi_router)
 app.include_router(submittal_router)
 app.include_router(submittal_attachment_router)
+app.include_router(drawing_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:

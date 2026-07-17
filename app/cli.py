@@ -34,6 +34,7 @@ from app.submittal_attachment_cli import (
     register_submittal_attachment_commands,
     run_submittal_attachment_command,
 )
+from app.drawing_cli import COMMANDS as DRAWING_COMMANDS, register_drawing_commands, run_drawing_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -48,6 +49,8 @@ from rfi.qa import RFIQuestionService
 from rfi.repository import JsonRFIRepository
 from submittal.qa import SubmittalQuestionService
 from submittal.repository import JsonSubmittalRepository
+from drawing_intelligence.qa import DrawingQuestionService
+from drawing_intelligence.repository import JsonDrawingRepository
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +117,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_rfi_commands(commands)
     register_submittal_commands(commands)
     register_submittal_attachment_commands(commands)
+    register_drawing_commands(commands)
     return parser
 
 
@@ -142,6 +146,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_submittal_command(args, settings)
     if args.command in SUBMITTAL_ATTACHMENT_COMMANDS:
         return run_submittal_attachment_command(args, settings)
+    if args.command in DRAWING_COMMANDS:
+        return run_drawing_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
@@ -236,6 +242,27 @@ def _run_ask(
     comparisons: JsonComparisonRepository | None = None,
     workflow: JsonChangeWorkflowRepository | None = None,
 ) -> int:
+    drawing_terms = (
+        "drawing", "sheet", "detail", "keynote", "one-line", "floor plan",
+        "graphical", "drawing index", "room", "equipment tag",
+    )
+    if any(term in args.question.casefold() for term in drawing_terms):
+        drawing_answer = DrawingQuestionService(
+            JsonDrawingRepository(settings.data_directory / "drawing-intelligence")
+        ).answer(args.project_id, args.question)
+        if drawing_answer.sufficient:
+            print(f"Answer: {drawing_answer.answer}")
+            print("Status: answered")
+            print(f"Evidence type: {drawing_answer.evidence_type}")
+            for drawing_citation in drawing_answer.citations:
+                print(
+                    f"Source: sheet {drawing_citation.sheet_number or 'unknown'}, "
+                    f"page {drawing_citation.page_number}, "
+                    f"region {drawing_citation.region.normalized_box.model_dump()}"
+                )
+            for limitation in drawing_answer.limitations:
+                print(f"Limitation: {limitation}")
+            return 0
     submittal_terms = (
         "submittal",
         "shop drawing",
@@ -403,7 +430,8 @@ def _run_compare(
         try:
             target = args.output.expanduser().resolve()
             workspace_root = Path.cwd().resolve()
-            if target != workspace_root and workspace_root not in target.parents:
+            data_root = settings.data_directory.expanduser().resolve()
+            if target != workspace_root and workspace_root not in target.parents and target != data_root and data_root not in target.parents:
                 raise ValueError("Report output must stay within the current workspace")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(rendered, encoding="utf-8")

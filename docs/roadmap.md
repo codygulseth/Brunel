@@ -1,5 +1,7 @@
 # Product Roadmap
 
+Drawing Intelligence Foundation now covers sheet indexing, explicit references, visual regions, guarded OCR, validation, search, and deterministic comparisons. The recommended next increment is richer positioned-text extraction and a human review experience; advanced graphical interpretation remains deferred.
+
 This roadmap advances Brunel from a reliable software foundation to an evidence-grounded construction operating system.
 
 The roadmap is capability-driven. Dates and priorities will be validated with construction users before implementation.

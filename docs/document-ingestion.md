@@ -1,5 +1,7 @@
 # Document Ingestion
 
+Drawing-set ingestion delegates loading, hashing, immutable `SourceDocument` creation, page extraction, chunking, and canonical storage to this pipeline. Drawing Intelligence attaches analysis to canonical document/page identifiers rather than creating a competing ingestion repository.
+
 Brunel's Project Knowledge Engine begins with a deterministic ingestion pipeline. Its job is to turn a supported local file into validated, traceable internal records that future retrieval and question-answering systems can consume.
 
 ## Architecture flow

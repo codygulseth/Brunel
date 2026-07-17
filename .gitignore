@@ -17,6 +17,7 @@ uploads/
 attachment-files/
 submittal-attachment-intelligence/
 reports/
+renders/
 comparison_reports/
 tmp/
 *.uploaded

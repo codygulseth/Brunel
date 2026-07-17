@@ -1,5 +1,7 @@
 # Development API
 
+Drawing Intelligence adds project-scoped drawing-set upload/list/detail/analyze, sheet metadata review, references, visual regions, validation, graph, controlled OCR, comparisons, search, cited drawing Q&A, audit, and local outbox endpoints. Uploads are PDF-only and capped at 50 MiB. The API remains unauthenticated development infrastructure.
+
 Start the canonical unauthenticated development API with `python -m app.api`. OpenAPI is available at `/docs` and `/openapi.json`; health and version endpoints are `/health` and `/version`.
 
 Endpoints provide bounded project-change listing/filtering, dashboard and review queue, register generation, change retrieval, assignment, controlled transitions, dispositions, notes, audit history, workflow links, related drafts, and notification outbox inspection. All record access is project-scoped. `X-Actor-ID`, `X-Actor-Name`, and `X-Correlation-ID` may identify local audit context; these headers are not authentication.

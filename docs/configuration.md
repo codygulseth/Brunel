@@ -1,5 +1,7 @@
 # Configuration
 
+Drawing artifacts use the configured Brunel data directory. OCR remains disabled unless a composition root explicitly injects a provider. External OCR/model processing is never selected implicitly. Title-block templates are versioned and may be explicitly selected during ingestion.
+
 Brunel reads immutable settings from `BRUNEL_*` environment variables. Defaults run entirely locally and require no secrets. See `config/example.env` for a copyable reference.
 
 ## Retrieval

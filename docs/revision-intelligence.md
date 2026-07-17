@@ -1,5 +1,7 @@
 # Revision Intelligence
 
+Drawing comparison follows the same conservative evidence principles at sheet, index, text, and reference level. Native text remains distinct from OCR. Content changes not explained by extracted text are reported as visual or unparsed content requiring human review.
+
 Revision Intelligence compares text-extractable document revisions, preserves evidence for every finding, and produces a reviewable construction change report. It supports specifications, minutes, RFIs, submittals, narrative drawings, text-based drawing PDFs, schedules, manuals, exhibits, and commissioning records.
 
 ## System flow

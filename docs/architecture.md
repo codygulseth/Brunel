@@ -1,5 +1,9 @@
 # Architecture
 
+## Drawing Intelligence
+
+Drawing analysis extends canonical `SourceDocument → DocumentPage → DocumentChunk` records rather than creating a competing pipeline. `DrawingSetRevision → DrawingSheet → VisualRegion → DrawingReference → DrawingReferenceGraph` aggregates are project-scoped and atomically persisted. Renderer and OCR protocols isolate infrastructure. Native text, OCR, system candidates, and human decisions remain distinct evidence classes.
+
 Brunel is an elite AI construction copilot designed around evidence, modularity, and human authority.
 
 ## Approach

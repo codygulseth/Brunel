@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes a conservative Drawing Intelligence foundation for immutable PDF drawing-set revisions, sheet/index identification, explicit reference graphs, visual-region citations, controlled OCR, validation, search, and text-level comparison. See [Drawing Intelligence Foundation](docs/drawing-intelligence-foundation.md).
+
 > An elite AI construction copilot—not a chatbot.
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
