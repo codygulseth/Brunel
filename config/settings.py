@@ -73,6 +73,18 @@ class RFISettings(BaseModel):
     exports_directory: Path = Path("reports/rfis")
 
 
+class SubmittalSettings(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    numbering_prefix: str = "SUB"
+    numbering_digits: int = Field(default=3, ge=2, le=8)
+    numbering_mode: str = Field(default="sequential", pattern=r"^(sequential|specification)$")
+    model_assistance_enabled: bool = False
+    require_reapproval_after_change: bool = True
+    due_soon_days: int = Field(default=7, ge=1, le=90)
+    calendar_mode: str = "calendar_days"
+    exports_directory: Path = Path("reports/submittals")
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(frozen=True)
     environment: str = "development"
@@ -84,6 +96,7 @@ class Settings(BaseModel):
     revisions: RevisionSettings = RevisionSettings()
     workflow: WorkflowSettings = WorkflowSettings()
     rfi: RFISettings = RFISettings()
+    submittal: SubmittalSettings = SubmittalSettings()
 
 
 def _as_bool(value: str) -> bool:
@@ -162,5 +175,21 @@ def get_settings() -> Settings:
             ),
             default_required_days=int(os.getenv("BRUNEL_RFI_DEFAULT_REQUIRED_DAYS", "10")),
             exports_directory=Path(os.getenv("BRUNEL_RFI_EXPORT_DIRECTORY", "reports/rfis")),
+        ),
+        submittal=SubmittalSettings(
+            numbering_prefix=os.getenv("BRUNEL_SUBMITTAL_NUMBER_PREFIX", "SUB"),
+            numbering_digits=int(os.getenv("BRUNEL_SUBMITTAL_NUMBER_DIGITS", "3")),
+            numbering_mode=os.getenv("BRUNEL_SUBMITTAL_NUMBER_MODE", "sequential"),
+            model_assistance_enabled=_as_bool(
+                os.getenv("BRUNEL_SUBMITTAL_MODEL_ASSISTANCE", "false")
+            ),
+            require_reapproval_after_change=_as_bool(
+                os.getenv("BRUNEL_SUBMITTAL_REAPPROVAL_AFTER_CHANGE", "true")
+            ),
+            due_soon_days=int(os.getenv("BRUNEL_SUBMITTAL_DUE_SOON_DAYS", "7")),
+            calendar_mode=os.getenv("BRUNEL_SUBMITTAL_CALENDAR_MODE", "calendar_days"),
+            exports_directory=Path(
+                os.getenv("BRUNEL_SUBMITTAL_EXPORT_DIRECTORY", "reports/submittals")
+            ),
         ),
     )

@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, Revision Intelligence, operational project-change review, and evidence-backed RFI automation. It does not yet provide OCR, drawing vision, production vector retrieval, external document-control integration, or automated construction decisions.
+This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, Revision Intelligence, operational project-change review, evidence-backed RFI automation, and evidence-backed submittal automation. It does not yet provide OCR, drawing vision, production vector retrieval, external document-control integration, or automated construction decisions.
 
 ## Product principles
 
@@ -26,6 +26,7 @@ rag/                   Citation-aware retrieval contracts
 revision_intelligence/ Revision lineage, alignment, diffing, classification, reports
 change_workflow/       Assignable, auditable project change review and resolution
 rfi/                   Evidence-backed RFI drafting, review, response, logs, and audit
+submittal/             Cited requirements, register, packages, reviews, responses, procurement
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -122,3 +123,9 @@ Material revision findings can enter an idempotent project change register, rece
 Project changes can now generate canonical, project-scoped RFI drafts that preserve their original citations. Brunel provides deterministic drafting and quality checks, duplicate indicators, sequential numbering, internal review and immutable text revisions, explicit official responses, conservative response analysis, human-confirmed impact records, logs, dashboards, audit history, a local notification outbox, FastAPI routes, CLI workflows, and operational RFI Q&A.
 
 RFIs are internal records only. Drafts require human approval, official responses must be explicitly identified, and Brunel never confirms cost or schedule impact automatically. No email or external document-control action occurs. See [RFI automation](docs/rfi-automation.md).
+
+## Submittal automation
+
+Brunel can extract cited submittal requirements from project specifications, route human admission decisions into a project-scoped register, assemble immutable package revisions, block incomplete packages, require internal approval before issue, record official design-team dispositions separately from internal notes and Brunel inference, manage revise-and-resubmit history, calculate deterministic procurement planning dates, and require human procurement release.
+
+The module also provides audit history, local notifications, logs, dashboards, Markdown/JSON/CSV output, FastAPI routes, CLI commands, RFI/project-change links, staleness handling, and cited operational Q&A. It does not determine technical compliance or contact external systems. See [Submittal automation](docs/submittal-automation.md).

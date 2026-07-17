@@ -79,3 +79,18 @@ Comparison is local by default. `--use-model` sends no content in this version; 
 
 The current local service always works deterministically. Enabling the model flag alone does not configure or call a provider; a provider must be explicitly injected at composition time. Notifications remain local outbox records even when `BRUNEL_NOTIFICATION_OUTBOX=true`.
 
+## Submittal automation
+
+| Variable | Default | Purpose |
+| --- | ---: | --- |
+| `BRUNEL_SUBMITTAL_NUMBER_PREFIX` | `SUB` | Project register numbering prefix |
+| `BRUNEL_SUBMITTAL_NUMBER_DIGITS` | `3` | Zero-padded sequence width |
+| `BRUNEL_SUBMITTAL_NUMBER_MODE` | `sequential` | `sequential` or specification-section prefix mode |
+| `BRUNEL_SUBMITTAL_MODEL_ASSISTANCE` | `false` | Permit explicitly injected optional extraction assistance |
+| `BRUNEL_SUBMITTAL_REAPPROVAL_AFTER_CHANGE` | `true` | Document the current mandatory package-reapproval policy |
+| `BRUNEL_SUBMITTAL_DUE_SOON_DAYS` | `7` | Local deadline-notification horizon |
+| `BRUNEL_SUBMITTAL_CALENDAR_MODE` | `calendar_days` | Deterministic date-calculation basis |
+| `BRUNEL_SUBMITTAL_EXPORT_DIRECTORY` | `reports/submittals` | Ignored generated export root |
+
+Submittal extraction and completeness run deterministically without a model. Setting the assistance flag alone cannot call an external provider; composition must also inject one. Notifications are local outbox records, and procurement release always requires a human service action.
+

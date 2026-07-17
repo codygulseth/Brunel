@@ -566,6 +566,24 @@ class RFIService:
         self._audit(item, actor, "export_generated", None, format_name)
         return item
 
+    def link_submittal(
+        self,
+        project_id: str,
+        rfi_id: str,
+        submittal_id: str,
+        actor: ActorReference,
+    ) -> RFI:
+        """Add a canonical submittal backlink without changing RFI resolution state."""
+        item = self.get(project_id, rfi_id)
+        if submittal_id in item.related_submittal_ids:
+            return item
+        updated = self._save(
+            item,
+            related_submittal_ids=item.related_submittal_ids + (submittal_id,),
+        )
+        self._audit(updated, actor, "submittal_linked", None, submittal_id)
+        return updated
+
     def _revision(self, rfi: RFI, actor: ActorReference, summary: str) -> RFI:
         number = len(rfi.revisions) + 1
         content = (

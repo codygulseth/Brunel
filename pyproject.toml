@@ -35,8 +35,8 @@ dev = [
 where = [".", "src"]
 include = [
   "ai_project_engineer*", "app*", "core*", "agents*", "document_processing*",
-  "rag*", "tools*", "workflows*", "models*", "prompts*", "storage*", "config*"
-  , "revision_intelligence*", "change_workflow*", "rfi*"
+  "rag*", "tools*", "workflows*", "models*", "prompts*", "storage*", "config*",
+  "revision_intelligence*", "change_workflow*", "rfi*", "submittal*",
 ]
 
 [tool.setuptools.package-data]

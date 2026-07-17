@@ -30,15 +30,18 @@ from revision_intelligence.repository import JsonComparisonRepository
 from revision_intelligence.models import ComparisonRequest
 from revision_intelligence.service import RevisionComparisonService
 from rfi.errors import RFIError, RFINotFoundError
+from submittal.errors import SubmittalError, SubmittalNotFoundError
 from storage import JsonDocumentRepository
 from app.rfi_api import router as rfi_router
+from app.submittal_api import router as submittal_router
 
 app = FastAPI(
-    title="Brunel Revision Review API",
-    version="0.2.0",
+    title="Brunel Development API",
+    version="0.4.0",
     description="Development-only API. Authentication and authorization are not implemented.",
 )
 app.include_router(rfi_router)
+app.include_router(submittal_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:
@@ -136,6 +139,14 @@ async def workflow_error(_: Request, exc: ChangeWorkflowError):
 @app.exception_handler(RFIError)
 async def rfi_error(_: Request, exc: RFIError):
     status = 404 if isinstance(exc, RFINotFoundError) else 409
+    return __import__("fastapi").responses.JSONResponse(
+        status_code=status, content={"detail": str(exc)}
+    )
+
+
+@app.exception_handler(SubmittalError)
+async def submittal_error(_: Request, exc: SubmittalError):
+    status = 404 if isinstance(exc, SubmittalNotFoundError) else 409
     return __import__("fastapi").responses.JSONResponse(
         status_code=status, content={"detail": str(exc)}
     )

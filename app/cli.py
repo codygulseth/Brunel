@@ -24,6 +24,11 @@ from rag.interfaces import GroundedAnswerProvider
 from storage import JsonDocumentRepository
 from app.change_cli import COMMANDS as CHANGE_COMMANDS, register_change_commands, run_change_command
 from app.rfi_cli import COMMANDS as RFI_COMMANDS, register_rfi_commands, run_rfi_command
+from app.submittal_cli import (
+    COMMANDS as SUBMITTAL_COMMANDS,
+    register_submittal_commands,
+    run_submittal_command,
+)
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -36,6 +41,8 @@ from revision_intelligence.qa import ComparisonQuestionAnsweringService
 from revision_intelligence.service import RevisionComparisonService
 from rfi.qa import RFIQuestionService
 from rfi.repository import JsonRFIRepository
+from submittal.qa import SubmittalQuestionService
+from submittal.repository import JsonSubmittalRepository
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +107,7 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--note")
     register_change_commands(commands)
     register_rfi_commands(commands)
+    register_submittal_commands(commands)
     return parser
 
 
@@ -124,6 +132,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_change_command(args, settings)
     if args.command in RFI_COMMANDS:
         return run_rfi_command(args, settings)
+    if args.command in SUBMITTAL_COMMANDS:
+        return run_submittal_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
@@ -218,6 +228,28 @@ def _run_ask(
     comparisons: JsonComparisonRepository | None = None,
     workflow: JsonChangeWorkflowRepository | None = None,
 ) -> int:
+    submittal_terms = (
+        "submittal",
+        "shop drawing",
+        "product data",
+        "approved package",
+        "procurement release",
+    )
+    if any(term in args.question.casefold() for term in submittal_terms):
+        submittal_answer = SubmittalQuestionService(
+            JsonSubmittalRepository(settings.data_directory / "submittals")
+        ).answer(args.project_id, args.question)
+        if submittal_answer.sufficient:
+            print(f"Answer: {submittal_answer.answer}")
+            print("Status: answered")
+            print("Evidence type: cited specification, project record, and official response")
+            for submittal_citation in submittal_answer.citations:
+                print(
+                    f"Source: {submittal_citation.citation.document_name} "
+                    f"(page {submittal_citation.citation.page_number}, "
+                    f"chunk {submittal_citation.citation.chunk_id})"
+                )
+            return 0
     rfi_terms = ("rfi", "request for information", "architect answered", "engineer confirm")
     if any(term in args.question.casefold() for term in rfi_terms):
         rfi_answer = RFIQuestionService(JsonRFIRepository(settings.data_directory / "rfi")).answer(
