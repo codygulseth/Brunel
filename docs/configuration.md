@@ -104,3 +104,5 @@ Submittal extraction and completeness run deterministically without a model. Set
 
 Procurement candidate extraction, date planning, exposure, dashboards, search, and comparison are deterministic. Calendar-day policy `procurement-calendar-1` is the only implemented calendar. External models and notification delivery remain disabled by default.
 
+Schedule CPM refuses incomplete durations, invalid identities, cycles, and missing calendars unless the caller explicitly enables the approximate calendar-day fallback. Source metrics are never overwritten. External schedule platforms, models, and notification delivery are disabled or absent by default.
+

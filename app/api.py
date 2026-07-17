@@ -38,6 +38,7 @@ from app.submittal_attachment_api import router as submittal_attachment_router
 from app.drawing_api import router as drawing_router
 from app.meeting_api import router as meeting_router
 from app.procurement_api import router as procurement_router
+from app.schedule_api import router as schedule_router
 
 app = FastAPI(
     title="Brunel Development API",
@@ -50,6 +51,7 @@ app.include_router(submittal_attachment_router)
 app.include_router(drawing_router)
 app.include_router(meeting_router)
 app.include_router(procurement_router)
+app.include_router(schedule_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:

@@ -37,6 +37,7 @@ from app.submittal_attachment_cli import (
 from app.drawing_cli import COMMANDS as DRAWING_COMMANDS, register_drawing_commands, run_drawing_command
 from app.meeting_cli import COMMANDS as MEETING_COMMANDS, register_meeting_commands, run_meeting_command
 from app.procurement_cli import COMMANDS as PROCUREMENT_COMMANDS, register_procurement_commands, run_procurement_command
+from app.schedule_cli import COMMANDS as SCHEDULE_COMMANDS, register_schedule_commands, run_schedule_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -124,6 +125,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_drawing_commands(commands)
     register_meeting_commands(commands)
     register_procurement_commands(commands)
+    register_schedule_commands(commands)
     return parser
 
 
@@ -158,6 +160,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_meeting_command(args, settings)
     if args.command in PROCUREMENT_COMMANDS:
         return run_procurement_command(args, settings)
+    if args.command in SCHEDULE_COMMANDS:
+        return run_schedule_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":

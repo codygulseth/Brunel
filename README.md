@@ -32,6 +32,7 @@ change_workflow/       Assignable, auditable project change review and resolutio
 rfi/                   Evidence-backed RFI drafting, review, response, logs, and audit
 submittal/             Requirements, packages, attachment evidence, reviews, responses, procurement
 procurement/           Register, lead times, date plans, release guardrails, exposure, delivery
+schedule_intelligence/ Immutable revisions, quality, CPM evidence, lineage, schedule comparison
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
