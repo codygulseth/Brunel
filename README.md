@@ -24,6 +24,7 @@ agents/               Agent contracts and registry
 document_processing/  Document intake and parsing contracts
 rag/                   Citation-aware retrieval contracts
 revision_intelligence/ Revision lineage, alignment, diffing, classification, reports
+change_workflow/       Assignable, auditable project change review and resolution
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -110,3 +111,7 @@ python -m app.cli ask --project-id demo-project --question "What changed in the 
 ```
 
 The pipeline preserves exact old/new excerpts and page/chunk citations, flags construction-significant changes, and labels implications as requiring human review. See [Revision Intelligence](docs/revision-intelligence.md).
+
+## Revision review workflow
+
+Material revision findings can enter an idempotent project change register, receive assignments and due dates, move through validated review states, retain dispositions and append-only notes, create minimal linked draft actions, and remain traceable through audit history to original evidence. A project dashboard prioritizes open, overdue, high-priority, and stale-source changes. See [revision review workflow](docs/revision-review-workflow.md) and the [development API](docs/api.md).

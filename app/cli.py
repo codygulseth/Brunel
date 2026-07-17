@@ -22,6 +22,9 @@ from rag import (
 )
 from rag.interfaces import GroundedAnswerProvider
 from storage import JsonDocumentRepository
+from app.change_cli import COMMANDS as CHANGE_COMMANDS, register_change_commands, run_change_command
+from change_workflow.qa import OperationalQuestionService
+from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
 from revision_intelligence.errors import RevisionIntelligenceError
 from revision_intelligence.lineage import RevisionLineageService
@@ -92,6 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--status", choices=[item.value for item in ChangeReviewStatus], required=True
     )
     review.add_argument("--note")
+    register_change_commands(commands)
     return parser
 
 
@@ -111,12 +115,15 @@ def main(argv: list[str] | None = None) -> int:
     comparison_repository = JsonComparisonRepository(
         settings.data_directory / "revision-intelligence"
     )
+    workflow_repository = JsonChangeWorkflowRepository(settings.data_directory / "change-workflow")
+    if args.command in CHANGE_COMMANDS:
+        return run_change_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
         return _run_search(args, repository, settings)
     if args.command == "ask":
-        return _run_ask(args, repository, settings, comparison_repository)
+        return _run_ask(args, repository, settings, comparison_repository, workflow_repository)
     if args.command == "compare":
         return _run_compare(args, repository, comparison_repository, settings)
     if args.command == "revisions":
@@ -203,7 +210,37 @@ def _run_ask(
     repository: JsonDocumentRepository,
     settings: Settings,
     comparisons: JsonComparisonRepository | None = None,
+    workflow: JsonChangeWorkflowRepository | None = None,
 ) -> int:
+    operational_terms = (
+        "assigned",
+        "reviewing",
+        "overdue",
+        "unreviewed",
+        "resolved",
+        "disposition",
+        "requires an rfi",
+        "needs information",
+        "project change",
+    )
+    if workflow is not None and any(term in args.question.casefold() for term in operational_terms):
+        operational = OperationalQuestionService(workflow).answer(args.project_id, args.question)
+        if operational.sufficient:
+            record = operational.records[0]
+            print(f"Answer: {operational.answer}")
+            print("Status: answered")
+            print("Evidence type: project_team_record")
+            print(f"Project change: {record.id}")
+            print(f"Source comparison: {record.evidence.comparison_id}")
+            for label, operational_citation in (
+                ("Old source", record.evidence.old_citation),
+                ("New source", record.evidence.new_citation),
+            ):
+                if operational_citation:
+                    print(
+                        f"{label}: {operational_citation.document_name} (page {operational_citation.page_number}, chunk {operational_citation.chunk_id})"
+                    )
+            return 0
     if comparisons is not None and any(
         term in args.question.casefold() for term in ("changed", "change", "revision", "updated")
     ):

@@ -40,3 +40,5 @@ Saved records contain source hashes, configuration and rules versions, warnings,
 Comparison runs locally. Model assistance is disabled in the CLI unless an application adapter injects a provider; an unavailable or failing optional provider produces a warning and preserves the deterministic result. Providers receive validated findings rather than unrestricted project storage. No API keys or full source documents are logged. Results remain project-scoped.
 
 There is no OCR, raster comparison, CAD/BIM parsing, graphical change clouding, or proprietary integration. PDF extraction controls quality; tables can lose visual structure; moved content can be ambiguous. Significance is decision support, not a substitute for contractual interpretation, licensed design judgment, safety authority, or professional review.
+
+Operational review is implemented separately in `change_workflow`. Revision findings remain immutable evidence of document changes; project changes add assignments, dispositions, notes, links, resolution, and audit without rewriting the source comparison.

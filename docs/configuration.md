@@ -50,3 +50,18 @@ The API key must be supplied through the runtime environment or secret manager a
 
 Comparison is local by default. `--use-model` sends no content in this version; it warns and falls back deterministically.
 
+## Revision review workflow
+
+| Variable | Default | Purpose |
+| --- | ---: | --- |
+| `BRUNEL_AUTO_REGISTER_GENERATION` | `false` | Explicitly enable post-comparison admission orchestration |
+| `BRUNEL_ADMISSION_POLICY_VERSION` | `change-admission-v1` | Versioned deterministic materiality rules |
+| `BRUNEL_DEFAULT_REVIEW_PRIORITY` | `medium` | Manual-record default policy |
+| `BRUNEL_DUE_SOON_DAYS` | `7` | Dashboard due-soon boundary |
+| `BRUNEL_AUTO_REGENERATION` | `false` | Explicitly enable synchronous regeneration |
+| `BRUNEL_NOTIFICATION_OUTBOX` | `true` | Queue local notification requests only |
+| `BRUNEL_API_HOST` | `127.0.0.1` | Development API bind host |
+| `BRUNEL_API_PORT` | `8001` | Development API port |
+| `BRUNEL_API_PAGE_LIMIT` | `50` | Default bounded list size |
+| `BRUNEL_LEGACY_COMPATIBILITY` | `true` | Retain deprecated prototype compatibility |
+

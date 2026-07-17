@@ -48,6 +48,20 @@ class RevisionSettings(BaseModel):
     rules_version: str = "construction-rules-v1"
 
 
+class WorkflowSettings(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    automatic_register_generation: bool = False
+    admission_policy_version: str = "change-admission-v1"
+    default_priority: str = "medium"
+    due_soon_days: int = Field(default=7, ge=1, le=90)
+    automatic_regeneration: bool = False
+    notification_outbox_enabled: bool = True
+    api_host: str = "127.0.0.1"
+    api_port: int = Field(default=8001, ge=1, le=65535)
+    api_page_limit: int = Field(default=50, ge=1, le=200)
+    legacy_compatibility: bool = True
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(frozen=True)
     environment: str = "development"
@@ -57,6 +71,7 @@ class Settings(BaseModel):
     retrieval: RetrievalSettings = RetrievalSettings()
     answers: AnswerSettings = AnswerSettings()
     revisions: RevisionSettings = RevisionSettings()
+    workflow: WorkflowSettings = WorkflowSettings()
 
 
 def _as_bool(value: str) -> bool:
@@ -108,5 +123,21 @@ def get_settings() -> Settings:
             minimum_severity=os.getenv("BRUNEL_REVISION_MINIMUM_SEVERITY", "low"),
             report_output_directory=Path(os.getenv("BRUNEL_REPORT_OUTPUT_DIRECTORY", "reports")),
             rules_version=os.getenv("BRUNEL_REVISION_RULES_VERSION", "construction-rules-v1"),
+        ),
+        workflow=WorkflowSettings(
+            automatic_register_generation=_as_bool(
+                os.getenv("BRUNEL_AUTO_REGISTER_GENERATION", "false")
+            ),
+            admission_policy_version=os.getenv(
+                "BRUNEL_ADMISSION_POLICY_VERSION", "change-admission-v1"
+            ),
+            default_priority=os.getenv("BRUNEL_DEFAULT_REVIEW_PRIORITY", "medium"),
+            due_soon_days=int(os.getenv("BRUNEL_DUE_SOON_DAYS", "7")),
+            automatic_regeneration=_as_bool(os.getenv("BRUNEL_AUTO_REGENERATION", "false")),
+            notification_outbox_enabled=_as_bool(os.getenv("BRUNEL_NOTIFICATION_OUTBOX", "true")),
+            api_host=os.getenv("BRUNEL_API_HOST", "127.0.0.1"),
+            api_port=int(os.getenv("BRUNEL_API_PORT", "8001")),
+            api_page_limit=int(os.getenv("BRUNEL_API_PAGE_LIMIT", "50")),
+            legacy_compatibility=_as_bool(os.getenv("BRUNEL_LEGACY_COMPATIBILITY", "true")),
         ),
     )
