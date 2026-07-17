@@ -24,6 +24,7 @@ class Workflow(Protocol):
 
 
 # TODO(construction-qa): add RFI and submittal workflows after requirements are documented.
-# TODO(procurement): add deterministic long-lead tracking workflows.
+# Procurement Intelligence implements deterministic long-lead planning in the canonical
+# `procurement` domain; cross-module workflow orchestration remains explicit at service boundaries.
 # TODO(safety): safety features must support humans and never claim compliance or approval.
 # TODO(commissioning): add readiness and issue-tracking workflows.

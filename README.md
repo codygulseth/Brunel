@@ -31,6 +31,7 @@ revision_intelligence/ Revision lineage, alignment, diffing, classification, rep
 change_workflow/       Assignable, auditable project change review and resolution
 rfi/                   Evidence-backed RFI drafting, review, response, logs, and audit
 submittal/             Requirements, packages, attachment evidence, reviews, responses, procurement
+procurement/           Register, lead times, date plans, release guardrails, exposure, delivery
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -131,6 +132,8 @@ RFIs are internal records only. Drafts require human approval, official response
 ## Submittal automation
 
 Brunel can extract cited submittal requirements from project specifications, route human admission decisions into a project-scoped register, assemble immutable package revisions, block incomplete packages, require internal approval before issue, record official design-team dispositions separately from internal notes and Brunel inference, manage revise-and-resubmit history, calculate deterministic procurement planning dates, and require human procurement release.
+
+Brunel now has a canonical Procurement Intelligence foundation: cited candidate review, project-scoped numbering and registers, source-preserving lead-time history, transparent calendar-day plans, dependencies and milestones, human-only release authorization, versioned forecasts, explainable exposure, delivery/acceptance separation, staleness, dashboards, and plan comparison. It never places orders, commits funds, approves vendors/products, or edits the schedule. See [Procurement Intelligence](docs/procurement-intelligence.md).
 
 The module also provides audit history, local notifications, logs, dashboards, Markdown/JSON/CSV output, FastAPI routes, CLI commands, RFI/project-change links, staleness handling, and cited operational Q&A. It does not determine technical compliance or contact external systems. See [Submittal automation](docs/submittal-automation.md).
 

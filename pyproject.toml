@@ -39,6 +39,7 @@ include = [
   "revision_intelligence*", "change_workflow*", "rfi*", "submittal*",
   "drawing_intelligence*",
   "meeting_tracking*",
+  "procurement*",
 ]
 
 [tool.setuptools.package-data]

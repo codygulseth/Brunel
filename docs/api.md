@@ -20,6 +20,8 @@ RFI routes delegate all lifecycle rules to `RFIService`. HTTP 404 represents a m
 
 Project-scoped routes cover specification requirement extraction and candidate review; register creation, listing, retrieval, assignment, procurement dates, and controlled transitions; package creation, completeness, internal review, issue, official/informal responses, conservative response analysis, resubmittals, and staleness; human procurement release; and logs, dashboard, audit, export, and operational Q&A.
 
+Procurement Intelligence adds project-scoped candidate extraction/review, item and lifecycle operations, lead times, date plans, dependencies, milestones, forecasts, readiness, human authorization, delivery, staleness, audit, register, dashboard, exposure, plan snapshots, and comparisons. These unauthenticated development routes never place orders, send notifications, or modify schedules.
+
 All workflow rules remain in `SubmittalService`. Missing records return 404, lifecycle conflicts return 409, and malformed requests return 422. Citation output keeps document/page/chunk identity but strips `source_location`. The API never uploads a package externally, sends a notification, calls a model by default, determines technical compliance, or releases procurement automatically. See [Submittal automation](submittal-automation.md).
 
 ## Submittal attachment intelligence routes

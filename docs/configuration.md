@@ -102,3 +102,5 @@ The current local service always works deterministically. Enabling the model fla
 
 Submittal extraction and completeness run deterministically without a model. Setting the assistance flag alone cannot call an external provider; composition must also inject one. Notifications are local outbox records, and procurement release always requires a human service action.
 
+Procurement candidate extraction, date planning, exposure, dashboards, search, and comparison are deterministic. Calendar-day policy `procurement-calendar-1` is the only implemented calendar. External models and notification delivery remain disabled by default.
+

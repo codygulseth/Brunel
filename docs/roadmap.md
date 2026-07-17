@@ -37,7 +37,8 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 - External submittal document-control adapters, OCR/table extraction, and richer approval policies
 - Meeting-action and daily-report administration
 - Drawing and specification intelligence
-- Schedule and procurement intelligence
+- Procurement Intelligence: evidence-backed register, lead-time history, date planning, release guardrails, exposure, delivery, and plan comparison (foundation implemented)
+- Schedule Intelligence
 - Risk signals with evidence, confidence, and human disposition
 
 ## Specialized operations

@@ -39,6 +39,7 @@ Delivery adapters (future FastAPI, CLI, workers)
 - `change_workflow` owns operational admission, assignments, transitions, dispositions, notes, links, draft actions, audit, dashboard, staleness orchestration, notifications, and operational Q&A.
 - `rfi` owns canonical RFI numbering, evidence-backed drafting, validation, duplicate indicators, review/revisions, responses, impact records, reporting, audit, and operational Q&A.
 - `submittal` owns cited requirement extraction/admission, register numbering, immutable packages and attachment revisions, attachment content evidence, proposed compliance mappings, completeness matrices, reviews, official dispositions, resubmittals, procurement planning, staleness, reporting, audit, and operational Q&A.
+- `procurement` owns procurement candidates, stable register items, lead-time and forecast history, derived date plans, dependencies, milestones, release authorization, exposure, delivery, staleness, plan revisions, audit, API/CLI, and operational Q&A. It references canonical products, submittals, RFIs, changes, meetings, drawings, and schedules by ID.
 - `agents` defines narrow assistant behavior and a registry. An agent depends on interfaces, not concrete providers.
 - `tools` defines explicitly bounded capabilities. Side-effecting tools will require authorization and audit records.
 - `workflows` coordinates deterministic, reviewable processes. It is preferred over agent autonomy for known construction processes.
