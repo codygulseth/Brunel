@@ -34,3 +34,19 @@ The API key must be supplied through the runtime environment or secret manager a
 - `BRUNEL_LOG_LEVEL` controls verbosity: `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`.
 - `BRUNEL_LOG_JSON=true` enables structured JSON logs with project and retrieval context.
 
+## Revision Intelligence
+
+| Variable | Default | Purpose |
+| --- | ---: | --- |
+| `BRUNEL_REVISION_ALIGNMENT_THRESHOLD` | `0.55` | Minimum block-match score |
+| `BRUNEL_REVISION_AMBIGUOUS_THRESHOLD` | `0.08` | Near-tie ambiguity margin |
+| `BRUNEL_REVISION_MINIMUM_SIMILARITY` | `0.35` | Comparability baseline |
+| `BRUNEL_REVISION_MAXIMUM_BLOCK_SIZE` | `2000` | Normalization block cap |
+| `BRUNEL_REVISION_INCLUDE_FORMATTING` | `false` | Include formatting-only findings |
+| `BRUNEL_REVISION_MAXIMUM_EXCERPT_LENGTH` | `500` | Report excerpt limit |
+| `BRUNEL_REVISION_MINIMUM_SEVERITY` | `low` | Default report policy |
+| `BRUNEL_REPORT_OUTPUT_DIRECTORY` | `reports` | Generated report root |
+| `BRUNEL_REVISION_RULES_VERSION` | `construction-rules-v1` | Explainable ruleset |
+
+Comparison is local by default. `--use-model` sends no content in this version; it warns and falls back deterministically.
+

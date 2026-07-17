@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository includes Brunel's project foundation, deterministic document ingestion, and a local cited project-question-answering baseline. It does not yet provide OCR, drawing vision, production vector retrieval, or automated construction decisions.
+This repository includes Brunel's project foundation, deterministic document ingestion, cited project question answering, and Revision Intelligence for evidence-backed text revision comparison. It does not yet provide OCR, drawing vision, production vector retrieval, or automated construction decisions.
 
 ## Product principles
 
@@ -23,6 +23,7 @@ core/                 Dependency injection and logging
 agents/               Agent contracts and registry
 document_processing/  Document intake and parsing contracts
 rag/                   Citation-aware retrieval contracts
+revision_intelligence/ Revision lineage, alignment, diffing, classification, reports
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
@@ -97,3 +98,15 @@ python -m app.cli ask --project-id demo-project --question "What concrete streng
 Retrieval is project-scoped and deterministic. It combines normalized term coverage, term frequency, exact phrases, and construction identifiers such as sheet, room, RFI, submittal, revision, and specification references. Every factual answer includes citations built from the retrieved source chunks. If evidence is absent, partial, or conflicting, Brunel says so rather than guessing.
 
 The default `extractive` answer provider runs locally and quotes source text directly. An OpenAI-compatible provider can be explicitly configured through environment variables; it is disabled unless selected and validates structured output with bounded retries. See [retrieval and cited QA](docs/retrieval-and-cited-qa.md) and [configuration](docs/configuration.md).
+
+## Revision Intelligence
+
+Register related documents with `--document-family-id`, `--revision-sequence`, and optionally `--supersedes-document-id`, then compare them locally:
+
+```powershell
+python -m app.cli compare --project-id demo-project --old-document-id doc_old --new-document-id doc_new --output reports/change-report.md
+python -m app.cli comparison-list --project-id demo-project
+python -m app.cli ask --project-id demo-project --question "What changed in the switchgear lead time?"
+```
+
+The pipeline preserves exact old/new excerpts and page/chunk citations, flags construction-significant changes, and labels implications as requiring human review. See [Revision Intelligence](docs/revision-intelligence.md).

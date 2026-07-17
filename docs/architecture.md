@@ -27,6 +27,7 @@ Delivery adapters (future FastAPI, CLI, workers)
 - `models` contains shared identifiers and evidence primitives. Feature-specific models remain with their feature.
 - `document_processing` defines intake and parsing boundaries. Format-specific implementations come later.
 - `rag` defines citation-aware retrieval without choosing a vector database or model.
+- `revision_intelligence` owns lineage, comparability, normalization, alignment, token diffs, explainable classification, significance, saved findings, and rendering.
 - `agents` defines narrow assistant behavior and a registry. An agent depends on interfaces, not concrete providers.
 - `tools` defines explicitly bounded capabilities. Side-effecting tools will require authorization and audit records.
 - `workflows` coordinates deterministic, reviewable processes. It is preferred over agent autonomy for known construction processes.
@@ -52,7 +53,7 @@ A future FastAPI adapter should create `Application` during lifespan startup, ex
 
 ## Model readiness
 
-No model interface is implemented until a real use case defines its requirements. When needed, create a provider-neutral protocol and adapters for local inference and OpenAI. Include timeouts, cancellation, token/cost controls, structured outputs, redaction, observability, and evaluations. Provider credentials stay in environment or secret storage and are never committed.
+Model interfaces are introduced only when a concrete use case defines their requirements. Cited Q&A has a provider-neutral grounded-answer contract, and Revision Intelligence has an optional summary protocol limited to validated deterministic findings. Local or OpenAI-compatible adapters must include timeouts, cancellation, token/cost controls, structured outputs, redaction, observability, and evaluations. Provider credentials stay in environment or secret storage and are never committed.
 
 ## Safety and trust
 
@@ -101,4 +102,16 @@ User question
 `LocalProjectRetriever` reads validated ingestion aggregates through the repository interface and filters by project before scoring. `EvidenceAssessor` describes sufficiency and flags materially relevant measurement or approval-state conflicts. `CitedQuestionAnsweringService` supplies retrieved evidence to a provider, rejects unknown citation IDs and fabricated quotations, rebuilds citations from source chunks, and fails closed when provider output is invalid.
 
 Retrieval and answer generation are separate protocols. A future BM25, vector, hybrid, metadata, or reranking implementation can replace retrieval without changing answer providers. The default extractive provider needs no model. The optional OpenAI-compatible adapter is configured only at the delivery layer and returns a validated `AnswerDraft`; provider response objects never enter the domain model.
+
+## Revision Intelligence flow
+
+```text
+Old revision + New revision
+  -> lineage validation -> comparability -> source-mapped normalization
+  -> deterministic alignment -> token diff -> construction classification
+  -> significance and review state -> citation validation
+  -> JSON persistence -> Markdown/JSON report -> cited QA
+```
+
+Comparison services depend on repository protocols. Exact source excerpts remain separate from normalized matching text. External analysis cannot replace deterministic findings or source citations.
 

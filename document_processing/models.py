@@ -88,15 +88,23 @@ class SourceDocument(BaseModel):
     original_filename: str = Field(min_length=1)
     file_type: FileType
     document_type: DocumentType = DocumentType.UNKNOWN
+    document_family_id: str | None = None
+    document_number: str | None = None
+    discipline: str | None = None
     title: str | None = None
     revision: str | None = None
+    revision_sequence: int | None = Field(default=None, ge=0)
     revision_date: date | None = None
+    issue_date: date | None = None
+    status: str | None = None
     sheet_number: str | None = None
     specification_section: str | None = None
     source_path: Path
     ingestion_timestamp: datetime
     content_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
     parent_document_id: str | None = None
+    supersedes_document_id: str | None = None
+    superseded_by_document_id: str | None = None
 
 
 class IngestedDocument(BaseModel):

@@ -16,7 +16,8 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 
 - PDF, TXT, and Markdown intake with page-safe chunks and citations (foundation implemented)
 - Project-scoped local retrieval and citation-validated question answering (baseline implemented)
-- Controlled versioning, richer metadata, and permissions
+- Text-based Revision Intelligence with lineage, deterministic diffs, citations, review state, Markdown reports, and comparison-aware QA (foundation implemented)
+- Controlled permissions, richer family management, and stale-comparison refresh workflows
 - Parsing for drawings, specifications, RFIs, submittals, meeting minutes, and reports
 - Citation-aware indexing and retrieval
 - Evaluation datasets for retrieval quality and source fidelity

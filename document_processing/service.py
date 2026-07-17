@@ -40,12 +40,19 @@ class DocumentIngestionService:
         project_id: str,
         file_path: Path,
         document_type: DocumentType | None = None,
+        document_family_id: str | None = None,
+        document_number: str | None = None,
+        discipline: str | None = None,
         title: str | None = None,
         revision: str | None = None,
+        revision_sequence: int | None = None,
         revision_date: date | None = None,
+        issue_date: date | None = None,
+        status: str | None = None,
         sheet_number: str | None = None,
         specification_section: str | None = None,
         parent_document_id: str | None = None,
+        supersedes_document_id: str | None = None,
     ) -> IngestionResult:
         if not project_id.strip():
             raise ValueError("project_id must not be empty")
@@ -79,15 +86,22 @@ class DocumentIngestionService:
             original_filename=loaded.filename,
             file_type=loaded.file_type,
             document_type=normalized.document_type,
+            document_family_id=document_family_id,
+            document_number=document_number,
+            discipline=discipline,
             title=normalized.title,
             revision=normalized.revision,
+            revision_sequence=revision_sequence,
             revision_date=normalized.revision_date,
+            issue_date=issue_date,
+            status=status,
             sheet_number=normalized.sheet_number,
             specification_section=normalized.specification_section,
             source_path=loaded.path,
             ingestion_timestamp=self.clock(),
             content_hash=loaded.content_hash,
             parent_document_id=parent_document_id,
+            supersedes_document_id=supersedes_document_id or parent_document_id,
         )
         chunks = self.chunker.chunk(document, pages)
         warnings = tuple(warning for page in pages for warning in page.extraction_warnings)

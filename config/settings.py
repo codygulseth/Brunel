@@ -35,6 +35,19 @@ class AnswerSettings(BaseModel):
     provider: str = "extractive"
 
 
+class RevisionSettings(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    alignment_similarity_threshold: float = Field(default=0.55, ge=0, le=1)
+    ambiguous_match_threshold: float = Field(default=0.08, ge=0, le=1)
+    minimum_content_similarity: float = Field(default=0.35, ge=0, le=1)
+    maximum_block_size: int = Field(default=2_000, ge=100, le=20_000)
+    include_formatting_changes: bool = False
+    maximum_excerpt_length: int = Field(default=500, ge=50, le=4_000)
+    minimum_severity: str = "low"
+    report_output_directory: Path = Path("reports")
+    rules_version: str = "construction-rules-v1"
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(frozen=True)
     environment: str = "development"
@@ -43,6 +56,7 @@ class Settings(BaseModel):
     models: ModelSettings = ModelSettings()
     retrieval: RetrievalSettings = RetrievalSettings()
     answers: AnswerSettings = AnswerSettings()
+    revisions: RevisionSettings = RevisionSettings()
 
 
 def _as_bool(value: str) -> bool:
@@ -76,4 +90,23 @@ def get_settings() -> Settings:
             maximum_evidence_chunks=int(os.getenv("BRUNEL_MAXIMUM_EVIDENCE_CHUNKS", "8")),
         ),
         answers=AnswerSettings(provider=os.getenv("BRUNEL_ANSWER_PROVIDER", "extractive")),
+        revisions=RevisionSettings(
+            alignment_similarity_threshold=float(
+                os.getenv("BRUNEL_REVISION_ALIGNMENT_THRESHOLD", "0.55")
+            ),
+            ambiguous_match_threshold=float(
+                os.getenv("BRUNEL_REVISION_AMBIGUOUS_THRESHOLD", "0.08")
+            ),
+            minimum_content_similarity=float(
+                os.getenv("BRUNEL_REVISION_MINIMUM_SIMILARITY", "0.35")
+            ),
+            maximum_block_size=int(os.getenv("BRUNEL_REVISION_MAXIMUM_BLOCK_SIZE", "2000")),
+            include_formatting_changes=_as_bool(
+                os.getenv("BRUNEL_REVISION_INCLUDE_FORMATTING", "false")
+            ),
+            maximum_excerpt_length=int(os.getenv("BRUNEL_REVISION_MAXIMUM_EXCERPT_LENGTH", "500")),
+            minimum_severity=os.getenv("BRUNEL_REVISION_MINIMUM_SEVERITY", "low"),
+            report_output_directory=Path(os.getenv("BRUNEL_REPORT_OUTPUT_DIRECTORY", "reports")),
+            rules_version=os.getenv("BRUNEL_REVISION_RULES_VERSION", "construction-rules-v1"),
+        ),
     )

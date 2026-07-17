@@ -36,6 +36,7 @@ where = [".", "src"]
 include = [
   "ai_project_engineer*", "app*", "core*", "agents*", "document_processing*",
   "rag*", "tools*", "workflows*", "models*", "prompts*", "storage*", "config*"
+  , "revision_intelligence*"
 ]
 
 [tool.setuptools.package-data]

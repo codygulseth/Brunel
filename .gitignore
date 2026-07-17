@@ -14,5 +14,8 @@ htmlcov/
 data/
 ingested_data/
 uploads/
+reports/
+comparison_reports/
+tmp/
 *.uploaded
 .DS_Store

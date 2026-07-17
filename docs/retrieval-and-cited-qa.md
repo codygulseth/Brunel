@@ -89,3 +89,7 @@ Answer providers implement `GroundedAnswerProvider`. The optional OpenAI-compati
 
 Embeddings and vector databases are deferred until a construction-specific evaluation set can measure whether they improve recall without weakening project isolation or citation precision. Future drawing intelligence will emit the same page/sheet-aware chunks and citation structures, allowing retrieval to include title-block, callout, detail, and geometry-derived evidence without changing the answer contract.
 
+## Revision findings
+
+Questions with revision intent first search saved findings within the requested project. Supported answers include the comparison ID, exact old/new excerpts, and original document/page/chunk citations. Summaries never replace source evidence, and no other project's finding is considered.
+
