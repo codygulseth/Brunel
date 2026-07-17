@@ -30,6 +30,18 @@ class JsonDocumentRepository:
             return None
         return IngestedDocument.model_validate_json(target.read_text(encoding="utf-8"))
 
+    def list_by_project(self, project_id: str) -> tuple[IngestedDocument, ...]:
+        """Return only validated aggregates belonging to the requested project."""
+        document_directory = self.root / "documents"
+        if not document_directory.is_dir():
+            return ()
+        matches: list[IngestedDocument] = []
+        for path in sorted(document_directory.glob("doc_*.json")):
+            ingested = IngestedDocument.model_validate_json(path.read_text(encoding="utf-8"))
+            if ingested.document.project_id == project_id:
+                matches.append(ingested)
+        return tuple(matches)
+
     def _path(self, document_id: str) -> Path:
         if not document_id.startswith("doc_") or not document_id[4:].isalnum():
             raise ValueError("Invalid document ID")

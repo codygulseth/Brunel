@@ -1,24 +1,28 @@
+"""Provider-neutral retrieval and answer-generation interfaces."""
+
 from typing import Protocol
-from pydantic import BaseModel, ConfigDict, Field
-from models import Citation, ProjectId
 
-
-class RetrievalQuery(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    project_id: ProjectId
-    text: str = Field(min_length=1)
-    limit: int = Field(default=10, ge=1, le=100)
-
-
-class RetrievalResult(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    content: str
-    citation: Citation
-    relevance: float = Field(ge=0, le=1)
+from .models import (
+    AnswerDraft,
+    EvidenceAssessment,
+    ProjectQuestion,
+    RetrievalQuery,
+    RetrievalResult,
+)
 
 
 class Retriever(Protocol):
-    async def retrieve(self, query: RetrievalQuery) -> tuple[RetrievalResult, ...]: ...
+    def retrieve(self, query: RetrievalQuery) -> RetrievalResult: ...
 
 
-# TODO(project-memory): define ingestion, indexing, access-control, and freshness policies.
+class GroundedAnswerProvider(Protocol):
+    def generate(
+        self,
+        question: ProjectQuestion,
+        retrieval: RetrievalResult,
+        assessment: EvidenceAssessment,
+    ) -> AnswerDraft: ...
+
+
+class LanguageModelClient(Protocol):
+    def complete(self, *, system_prompt: str, user_prompt: str) -> str: ...

@@ -15,6 +15,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 ## Project memory and document intelligence
 
 - PDF, TXT, and Markdown intake with page-safe chunks and citations (foundation implemented)
+- Project-scoped local retrieval and citation-validated question answering (baseline implemented)
 - Controlled versioning, richer metadata, and permissions
 - Parsing for drawings, specifications, RFIs, submittals, meeting minutes, and reports
 - Citation-aware indexing and retrieval
@@ -22,7 +23,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 
 ## Construction workflows
 
-- Construction QA and cited cross-document questions
+- Construction QA evaluations and richer cited cross-document questions
 - RFI, submittal, meeting-action, and daily-report administration
 - Drawing and specification intelligence
 - Schedule and procurement intelligence

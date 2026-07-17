@@ -4,7 +4,7 @@
 
 Brunel is **an elite AI construction copilot that serves as an intelligent assistant to Project Engineers, Project Managers, Superintendents, and Owners by automating administrative work, understanding project documentation, providing evidence-backed answers, and proactively identifying project risks.**
 
-This repository includes Brunel's project foundation and its first functional capability: a local, deterministic document-ingestion pipeline. It does not yet provide question answering, production retrieval, OCR, or automated construction decisions.
+This repository includes Brunel's project foundation, deterministic document ingestion, and a local cited project-question-answering baseline. It does not yet provide OCR, drawing vision, production vector retrieval, or automated construction decisions.
 
 ## Product principles
 
@@ -79,3 +79,21 @@ python -m app.cli ingest --project-id demo-project --file .\path\to\document.pdf
 Optional metadata includes `--document-type`, `--title`, `--revision`, `--revision-date`, `--sheet-number`, and `--specification-section`. Generated records are written under `data/ingested/` by default and are ignored by Git. Set `BRUNEL_DATA_DIRECTORY` to choose another local data root.
 
 The current pipeline does not perform OCR. Image-only PDF pages are retained as empty page records with warnings so source page numbering is never lost. Drawing geometry, title-block interpretation, spreadsheets, schedules, and semantic retrieval are intentionally deferred. See [document ingestion](docs/document-ingestion.md) for the full design and limitations.
+
+## Search and cited questions
+
+Search a project's ingested chunks without generating an answer:
+
+```powershell
+python -m app.cli search --project-id demo-project --query "generator pad concrete strength" --top-k 5
+```
+
+Ask Brunel for an evidence-backed answer:
+
+```powershell
+python -m app.cli ask --project-id demo-project --question "What concrete strength is required for the generator pad?"
+```
+
+Retrieval is project-scoped and deterministic. It combines normalized term coverage, term frequency, exact phrases, and construction identifiers such as sheet, room, RFI, submittal, revision, and specification references. Every factual answer includes citations built from the retrieved source chunks. If evidence is absent, partial, or conflicting, Brunel says so rather than guessing.
+
+The default `extractive` answer provider runs locally and quotes source text directly. An OpenAI-compatible provider can be explicitly configured through environment variables; it is disabled unless selected and validates structured output with bounded retries. See [retrieval and cited QA](docs/retrieval-and-cited-qa.md) and [configuration](docs/configuration.md).

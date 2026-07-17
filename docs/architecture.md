@@ -85,3 +85,20 @@ Each stage has a typed interface. The service composes the stages without depend
 
 The local JSON repository is an adapter, not a domain dependency. PostgreSQL, object storage, or vector indexing can be added later without changing extraction or chunking. See [`document-ingestion.md`](document-ingestion.md).
 
+## Retrieval and cited-answer flow
+
+```text
+User question
+  -> Query normalization
+  -> Project-scoped retrieval
+  -> Evidence ranking
+  -> Evidence assessment
+  -> Grounded answer generation
+  -> Citation validation
+  -> Structured response
+```
+
+`LocalProjectRetriever` reads validated ingestion aggregates through the repository interface and filters by project before scoring. `EvidenceAssessor` describes sufficiency and flags materially relevant measurement or approval-state conflicts. `CitedQuestionAnsweringService` supplies retrieved evidence to a provider, rejects unknown citation IDs and fabricated quotations, rebuilds citations from source chunks, and fails closed when provider output is invalid.
+
+Retrieval and answer generation are separate protocols. A future BM25, vector, hybrid, metadata, or reranking implementation can replace retrieval without changing answer providers. The default extractive provider needs no model. The optional OpenAI-compatible adapter is configured only at the delivery layer and returns a validated `AnswerDraft`; provider response objects never enter the domain model.
+
