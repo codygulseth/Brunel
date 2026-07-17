@@ -1,5 +1,7 @@
 # Privacy and Security
 
+Meeting records can contain sensitive project and personnel information. Source text remains in canonical local storage, audit metadata excludes full transcripts, and the default feature performs no model egress, email delivery, calendar access, conferencing access, or external notification delivery.
+
 Drawing PDFs, renders, native text, OCR blocks, and reports remain local by default. Generated artifacts are excluded from Git. Audit/log records contain identifiers and summaries rather than full drawing content. No OCR/model egress occurs in the default implementation.
 
 Brunel treats documents, comparisons, and workflow records as confidential project information. Canonical services are local by default. No notification adapter delivers externally, no model call occurs unless explicitly enabled, and standard logs contain identifiers and counts rather than complete documents.

@@ -35,6 +35,7 @@ from app.submittal_attachment_cli import (
     run_submittal_attachment_command,
 )
 from app.drawing_cli import COMMANDS as DRAWING_COMMANDS, register_drawing_commands, run_drawing_command
+from app.meeting_cli import COMMANDS as MEETING_COMMANDS, register_meeting_commands, run_meeting_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -51,6 +52,8 @@ from submittal.qa import SubmittalQuestionService
 from submittal.repository import JsonSubmittalRepository
 from drawing_intelligence.qa import DrawingQuestionService
 from drawing_intelligence.repository import JsonDrawingRepository
+from meeting_tracking.qa import MeetingQuestionService
+from meeting_tracking.repository import JsonMeetingRepository
 
 logger = logging.getLogger(__name__)
 
@@ -118,6 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_submittal_commands(commands)
     register_submittal_attachment_commands(commands)
     register_drawing_commands(commands)
+    register_meeting_commands(commands)
     return parser
 
 
@@ -148,6 +152,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_submittal_attachment_command(args, settings)
     if args.command in DRAWING_COMMANDS:
         return run_drawing_command(args, settings)
+    if args.command in MEETING_COMMANDS:
+        return run_meeting_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
@@ -242,6 +248,18 @@ def _run_ask(
     comparisons: JsonComparisonRepository | None = None,
     workflow: JsonChangeWorkflowRepository | None = None,
 ) -> int:
+    meeting_terms = ("meeting", "minutes", "action item", "carried forward", "decision", "attendee")
+    if any(term in args.question.casefold() for term in meeting_terms):
+        meeting_answer = MeetingQuestionService(
+            JsonMeetingRepository(settings.data_directory / "meeting-tracking")
+        ).answer(args.project_id, args.question)
+        if meeting_answer.sufficient:
+            print(f"Answer: {meeting_answer.answer}")
+            print("Status: answered")
+            print(f"Evidence type: {meeting_answer.evidence_type}")
+            for item in meeting_answer.citations:
+                print(f"Source: {item.document_name} (page {item.page_number}, chunk {item.chunk_id})")
+            return 0
     drawing_terms = (
         "drawing", "sheet", "detail", "keynote", "one-line", "floor plan",
         "graphical", "drawing index", "room", "equipment tag",

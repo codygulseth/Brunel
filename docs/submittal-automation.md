@@ -1,5 +1,7 @@
 # Submittal Automation
 
+Meeting actions may cite or link submittal records, but meeting language never changes an official disposition, approval, procurement release, or package status automatically.
+
 Brunel's canonical `submittal` module manages evidence-backed submittal requirements, register items, packages, reviews, official responses, resubmittals, and procurement dependencies. It is an internal workflow system—not an architect/engineer review authority, procurement platform, or external document-control integration.
 
 ## Evidence and requirement admission

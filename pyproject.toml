@@ -38,6 +38,7 @@ include = [
   "rag*", "tools*", "workflows*", "models*", "prompts*", "storage*", "config*",
   "revision_intelligence*", "change_workflow*", "rfi*", "submittal*",
   "drawing_intelligence*",
+  "meeting_tracking*",
 ]
 
 [tool.setuptools.package-data]

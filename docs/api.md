@@ -1,5 +1,7 @@
 # Development API
 
+Meeting operations add project-scoped meeting/series creation, safe record upload, deterministic analysis, candidate review, action and decision registers, minutes review/issue, comparison, dashboards, search, audit, and cited Q&A. The API remains unauthenticated development infrastructure and never distributes minutes externally.
+
 Drawing Intelligence adds project-scoped drawing-set upload/list/detail/analyze, sheet metadata review, references, visual regions, validation, graph, controlled OCR, comparisons, search, cited drawing Q&A, audit, and local outbox endpoints. Uploads are PDF-only and capped at 50 MiB. The API remains unauthenticated development infrastructure.
 
 Start the canonical unauthenticated development API with `python -m app.api`. OpenAPI is available at `/docs` and `/openapi.json`; health and version endpoints are `/health` and `/version`.

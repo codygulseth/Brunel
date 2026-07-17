@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel now includes Meeting Minutes and Action Tracking: immutable meeting records, cited deterministic proposals, human-confirmed action and decision registers, carry-forward, minutes review, comparisons, dashboards, and operational Q&A.
+
 Brunel includes a conservative Drawing Intelligence foundation for immutable PDF drawing-set revisions, sheet/index identification, explicit reference graphs, visual-region citations, controlled OCR, validation, search, and text-level comparison. See [Drawing Intelligence Foundation](docs/drawing-intelligence-foundation.md).
 
 > An elite AI construction copilot—not a chatbot.

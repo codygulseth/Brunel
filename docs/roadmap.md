@@ -1,5 +1,7 @@
 # Product Roadmap
 
+Meeting Minutes and Action Tracking adds reviewed operational records, recurring-meeting carry-forward, decisions, minutes, comparisons, dashboards, and cited questions without external distribution or automatic downstream issuance.
+
 Drawing Intelligence Foundation now covers sheet indexing, explicit references, visual regions, guarded OCR, validation, search, and deterministic comparisons. The recommended next increment is richer positioned-text extraction and a human review experience; advanced graphical interpretation remains deferred.
 
 This roadmap advances Brunel from a reliable software foundation to an evidence-grounded construction operating system.

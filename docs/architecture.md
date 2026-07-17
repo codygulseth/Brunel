@@ -1,5 +1,9 @@
 # Architecture
 
+## Meeting operations
+
+Meeting tracking extends canonical `SourceDocument` ingestion with `Meeting → MeetingRecordRevision → ExtractedMeetingItem → Human Review → ProjectAction/ProjectDecision`. Operational records preserve source citations, project isolation, human authority, audit history, and local-only notification requests.
+
 ## Drawing Intelligence
 
 Drawing analysis extends canonical `SourceDocument → DocumentPage → DocumentChunk` records rather than creating a competing pipeline. `DrawingSetRevision → DrawingSheet → VisualRegion → DrawingReference → DrawingReferenceGraph` aggregates are project-scoped and atomically persisted. Renderer and OCR protocols isolate infrastructure. Native text, OCR, system candidates, and human decisions remain distinct evidence classes.

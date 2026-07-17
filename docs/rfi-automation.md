@@ -1,5 +1,7 @@
 # RFI Automation
 
+Meeting records may reference or link RFIs. Meeting extraction never creates or issues an RFI automatically and does not treat meeting discussion as an official RFI response.
+
 Brunel's canonical `rfi` module manages internal requests for information from evidence-backed draft through closure. It is a deterministic construction workflow, not an external document-control system. Every draft requires human review, and no email or external notification is sent.
 
 ## Lifecycle and authority

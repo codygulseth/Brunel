@@ -1,5 +1,7 @@
 # Revision Review and Project Change Workflow
 
+Meeting actions may link to existing project changes but never create or admit project-change records automatically. Explicit downstream draft creation must reuse the canonical workflow service and preserve meeting evidence.
+
 Revision findings describe document differences. Project changes describe how the project team reviews and resolves material findings. The workflow preserves that distinction and always links operational records back to immutable comparison and source-document citations.
 
 ```text

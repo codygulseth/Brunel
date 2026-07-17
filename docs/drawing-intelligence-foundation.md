@@ -1,5 +1,7 @@
 # Drawing Intelligence Foundation
 
+Meeting actions and decisions may link drawing sheets or comparison findings through explicit workflow links. Meeting extraction does not modify drawings or interpret graphical intent.
+
 Brunel indexes construction drawing sets conservatively. A set revision is a canonical immutable `SourceDocument`; drawing analysis attaches sheet, title-block, index, reference, region, readability, OCR, validation, graph, and comparison records to canonical document/page IDs.
 
 ## Evidence and workflow
