@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes Risk & Commitment Intelligence: a deterministic, evidence-backed cross-system review layer for risk candidates, commitments, cited dependencies, mitigation proposals, and human-managed dispositions. It never autonomously determines delay, responsibility, entitlement, compliance, or schedule changes.
+
 Brunel now includes Meeting Minutes and Action Tracking: immutable meeting records, cited deterministic proposals, human-confirmed action and decision registers, carry-forward, minutes review, comparisons, dashboards, and operational Q&A.
 
 Brunel includes a conservative Drawing Intelligence foundation for immutable PDF drawing-set revisions, sheet/index identification, explicit reference graphs, visual-region citations, controlled OCR, validation, search, and text-level comparison. See [Drawing Intelligence Foundation](docs/drawing-intelligence-foundation.md).

@@ -42,6 +42,7 @@ include = [
   "procurement*",
   "schedule_intelligence*",
   "field_intelligence*",
+  "risk_intelligence*",
 ]
 
 [tool.setuptools.package-data]
