@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes a canonical Integration Adapter Framework for capability-declared imports, immutable external evidence, normalized review proposals, explicitly approved idempotent exports, and reconciliation. See [Integration Adapter Framework](docs/integration-adapter-framework.md).
+
 Brunel includes Enterprise Project Intelligence for authorized portfolios, provenance-first historical metrics, human-reviewed lessons and identities, privacy-protected benchmarks, and explainable comparable-project analysis. See [Enterprise Project Intelligence](docs/enterprise-project-intelligence.md).
 
 Brunel includes a Contract Intelligence foundation for exact cited clauses, contract requirements, deterministic deadline candidates, internal notice drafts, obligation tracking, event chronologies, and qualified-human review. See [Contract Intelligence Foundation](docs/contract-intelligence-foundation.md).
