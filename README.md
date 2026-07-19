@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes Commissioning & Turnover Intelligence for cited systems/assets, requirements, checklists, test evidence, deficiencies, readiness proposals, and human-controlled turnover packages. See [Commissioning & Turnover Intelligence](docs/commissioning-turnover-intelligence.md).
+
 Brunel includes Risk & Commitment Intelligence: a deterministic, evidence-backed cross-system review layer for risk candidates, commitments, cited dependencies, mitigation proposals, and human-managed dispositions. It never autonomously determines delay, responsibility, entitlement, compliance, or schedule changes.
 
 Brunel now includes Meeting Minutes and Action Tracking: immutable meeting records, cited deterministic proposals, human-confirmed action and decision registers, carry-forward, minutes review, comparisons, dashboards, and operational Q&A.
