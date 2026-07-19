@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes a Contract Intelligence foundation for exact cited clauses, contract requirements, deterministic deadline candidates, internal notice drafts, obligation tracking, event chronologies, and qualified-human review. See [Contract Intelligence Foundation](docs/contract-intelligence-foundation.md).
+
 Brunel includes Commissioning & Turnover Intelligence for cited systems/assets, requirements, checklists, test evidence, deficiencies, readiness proposals, and human-controlled turnover packages. See [Commissioning & Turnover Intelligence](docs/commissioning-turnover-intelligence.md).
 
 Brunel includes Risk & Commitment Intelligence: a deterministic, evidence-backed cross-system review layer for risk candidates, commitments, cited dependencies, mitigation proposals, and human-managed dispositions. It never autonomously determines delay, responsibility, entitlement, compliance, or schedule changes.
