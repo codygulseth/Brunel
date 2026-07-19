@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes Enterprise Project Intelligence for authorized portfolios, provenance-first historical metrics, human-reviewed lessons and identities, privacy-protected benchmarks, and explainable comparable-project analysis. See [Enterprise Project Intelligence](docs/enterprise-project-intelligence.md).
+
 Brunel includes a Contract Intelligence foundation for exact cited clauses, contract requirements, deterministic deadline candidates, internal notice drafts, obligation tracking, event chronologies, and qualified-human review. See [Contract Intelligence Foundation](docs/contract-intelligence-foundation.md).
 
 Brunel includes Commissioning & Turnover Intelligence for cited systems/assets, requirements, checklists, test evidence, deficiencies, readiness proposals, and human-controlled turnover packages. See [Commissioning & Turnover Intelligence](docs/commissioning-turnover-intelligence.md).
