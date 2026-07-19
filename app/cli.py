@@ -39,6 +39,7 @@ from app.meeting_cli import COMMANDS as MEETING_COMMANDS, register_meeting_comma
 from app.procurement_cli import COMMANDS as PROCUREMENT_COMMANDS, register_procurement_commands, run_procurement_command
 from app.schedule_cli import COMMANDS as SCHEDULE_COMMANDS, register_schedule_commands, run_schedule_command
 from app.field_cli import COMMANDS as FIELD_COMMANDS, register_field_commands, run_field_command
+from app.risk_cli import COMMANDS as RISK_COMMANDS, register_risk_commands, run_risk_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -128,6 +129,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_procurement_commands(commands)
     register_schedule_commands(commands)
     register_field_commands(commands)
+    register_risk_commands(commands)
     return parser
 
 
@@ -166,6 +168,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_schedule_command(args, settings)
     if args.command in FIELD_COMMANDS:
         return run_field_command(args, settings)
+    if args.command in RISK_COMMANDS:
+        return run_risk_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
