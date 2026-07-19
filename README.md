@@ -33,6 +33,7 @@ rfi/                   Evidence-backed RFI drafting, review, response, logs, and
 submittal/             Requirements, packages, attachment evidence, reviews, responses, procurement
 procurement/           Register, lead times, date plans, release guardrails, exposure, delivery
 schedule_intelligence/ Immutable revisions, quality, CPM evidence, lineage, schedule comparison
+field_intelligence/    Daily reports, reviewed field records, progress proposals, field dashboards
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts
 models/                Shared domain value objects
