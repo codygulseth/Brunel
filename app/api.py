@@ -44,6 +44,7 @@ from app.risk_api import router as risk_router
 from app.commissioning_api import router as commissioning_router
 from app.contract_api import router as contract_router
 from app.enterprise_api import router as enterprise_router
+from app.integration_api import router as integration_router
 
 app = FastAPI(
     title="Brunel Development API",
@@ -62,6 +63,7 @@ app.include_router(risk_router)
 app.include_router(commissioning_router)
 app.include_router(contract_router)
 app.include_router(enterprise_router)
+app.include_router(integration_router)
 
 
 def _repository() -> JsonChangeWorkflowRepository:
