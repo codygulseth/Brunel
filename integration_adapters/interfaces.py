@@ -37,6 +37,18 @@ class IntegrationAdapter(ABC):
         self.require(Capability.RETRIEVE_EXTERNAL_RECORD)
         raise AdapterError("unsupported_capability", "Retrieval not implemented")
 
+    def validate_export_payload(
+        self, payload: dict[str, Any], configuration: dict[str, str]
+    ) -> tuple[str, ...]:
+        """Return adapter-specific validation errors without mutating external state."""
+        return ()
+
+    def validate_export_context(
+        self, proposal: object, connection: object, repository: object
+    ) -> tuple[str, ...]:
+        """Validate durable mapping or revision state immediately before execution."""
+        return ()
+
 
 class SecretProvider(ABC):
     @abstractmethod

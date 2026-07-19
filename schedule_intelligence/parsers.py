@@ -4,6 +4,7 @@ import csv
 from dataclasses import dataclass
 from pathlib import Path
 import xml.etree.ElementTree as ET
+from p6_adapter.parser import parse_p6
 
 
 @dataclass(frozen=True)
@@ -57,6 +58,23 @@ class XMLScheduleParser:
     version = "1"
 
     def parse(self, path: Path, mapping=None) -> ParsedSchedule:
+        # Production-shaped Primavera XML is parsed by the shared safe P6 parser.
+        # Keep the constrained fallback below for synthetic MS Project fixtures.
+        try:
+            source = parse_p6(path)
+            selected = _select_p6_project(source.projects, mapping)
+            activities, relationships = _canonical_p6_rows(selected)
+            return ParsedSchedule(
+                selected.metadata,
+                activities,
+                relationships,
+                selected.calendars,
+                selected.wbs,
+                selected.warnings,
+            )
+        except ValueError as exc:
+            if "no Project element" not in str(exc):
+                raise
         root = ET.parse(path).getroot()
         activities = []
         relationships = []
@@ -113,81 +131,150 @@ class XMLScheduleParser:
 
 
 class XERScheduleParser:
-    name = "xer-foundation"
-    version = "1"
+    name = "primavera-p6-xer"
+    version = "1.0.0"
 
     def parse(self, path: Path, mapping=None) -> ParsedSchedule:
-        tables = {}
-        table = None
-        fields = []
-        unsupported = []
-        for line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines():
-            parts = line.split("\t")
-            marker = parts[0]
-            if marker == "%T":
-                table = parts[1]
-                tables.setdefault(table, [])
-                fields = []
-            elif marker == "%F":
-                fields = parts[1:]
-            elif marker == "%R" and table and fields:
-                values = parts[1:]
-                tables[table].append(dict(zip(fields, values, strict=False)))
-        if "TASK" not in tables:
-            raise ValueError("XER required TASK table is unavailable")
-        activities = []
-        for row in tables["TASK"]:
-            item = dict(row)
-            item.update(
-                {
-                    "activity_id": row.get("task_code", row.get("task_id", "")),
-                    "activity_name": row.get("task_name", ""),
-                    "wbs_id": row.get("wbs_id", ""),
-                    "calendar_id": row.get("clndr_id", ""),
-                    "status": row.get("status_code", ""),
-                    "original_duration": row.get("target_drtn_hr_cnt", ""),
-                    "remaining_duration": row.get("remain_drtn_hr_cnt", ""),
-                    "planned_start": row.get("target_start_date", ""),
-                    "planned_finish": row.get("target_end_date", ""),
-                    "actual_start": row.get("act_start_date", ""),
-                    "actual_finish": row.get("act_end_date", ""),
-                    "total_float": row.get("total_float_hr_cnt", ""),
-                    "_xer_table": "TASK",
-                }
-            )
-            activities.append(item)
-        rels = []
-        for row in tables.get("TASKPRED", []):
-            rels.append(
-                {
-                    **row,
-                    "predecessor_id": row.get("pred_task_id", ""),
-                    "successor_id": row.get("task_id", ""),
-                    "relationship_type": row.get("pred_type", "FS"),
-                    "lag": row.get("lag_hr_cnt", "0"),
-                    "_xer_table": "TASKPRED",
-                }
-            )
-        known = {
-            "PROJECT",
-            "PROJWBS",
-            "TASK",
-            "TASKPRED",
-            "CALENDAR",
-            "ACTVTYPE",
-            "ACTVCODE",
-            "TASKACTV",
-            "UDFTYPE",
-            "UDFVALUE",
-        }
-        unsupported.extend(
-            f"Unsupported XER table preserved: {x}" for x in tables if x not in known
-        )
+        source = parse_p6(path, encoding=(mapping or {}).get("encoding"))
+        selected = _select_p6_project(source.projects, mapping)
+        activities, relationships = _canonical_p6_rows(selected)
         return ParsedSchedule(
-            (tables.get("PROJECT") or [{}])[0],
-            tuple(activities),
-            tuple(rels),
-            tuple(tables.get("CALENDAR", [])),
-            tuple(tables.get("PROJWBS", [])),
-            tuple(unsupported),
+            selected.metadata,
+            activities,
+            relationships,
+            selected.calendars,
+            selected.wbs,
+            source.warnings + selected.warnings,
         )
+
+
+def _ci(row, *names, default=""):
+    values = {str(k).casefold(): str(v) for k, v in row.items()}
+    return next((values[name.casefold()] for name in names if values.get(name.casefold())), default)
+
+
+def _select_p6_project(projects, mapping):
+    external_id = (mapping or {}).get("p6_project_id")
+    if external_id:
+        selected = next((p for p in projects if p.external_project_id == external_id), None)
+        if not selected:
+            raise ValueError("Configured P6 project is not present in source")
+        return selected
+    if len(projects) != 1:
+        raise ValueError("P6 source contains multiple projects; explicit p6_project_id is required")
+    return projects[0]
+
+
+def _canonical_p6_rows(project):
+    object_to_code = {
+        _ci(row, "task_id", "ObjectId", "UID", "Id"): _ci(
+            row, "task_code", "Id", "ActivityId", "UID"
+        )
+        for row in project.activities
+    }
+    code_values = {
+        _ci(row, "actv_code_id", "ObjectId"): _ci(row, "short_name", "CodeValue", "Value")
+        for row in project.activity_codes
+        if _ci(row, "actv_code_id", "ObjectId")
+    }
+    assigned = {}
+    for row in project.activity_codes:
+        task_id = _ci(row, "task_id", "ActivityObjectId")
+        code_id = _ci(row, "actv_code_id", "ActivityCodeObjectId")
+        if task_id and code_id:
+            assigned.setdefault(task_id, []).append(code_values.get(code_id, code_id))
+    udf_titles = {
+        _ci(row, "udf_type_id", "ObjectId"): _ci(
+            row, "udf_type_label", "Title", "Name", default="UDF"
+        )
+        for row in project.udfs
+        if _ci(row, "udf_type_id", "ObjectId") and _ci(row, "udf_type_label", "Title", "Name")
+    }
+    udf_assignments = {}
+    for row in project.udfs:
+        task_id = _ci(row, "fk_id", "task_id", "ActivityObjectId")
+        udf_type = _ci(row, "udf_type_id", "UDFTypeObjectId")
+        value = _ci(
+            row,
+            "udf_text",
+            "udf_number",
+            "udf_date",
+            "udf_code_id",
+            "TextValue",
+            "DoubleValue",
+            "DateValue",
+            "IndicatorValue",
+            "CostValue",
+        )
+        if task_id and udf_type and value:
+            udf_assignments.setdefault(task_id, {})[udf_titles.get(udf_type, udf_type)] = value
+    activities = []
+    for row in project.activities:
+        object_id = _ci(row, "task_id", "ObjectId", "UID")
+        code = _ci(row, "task_code", "Id", "ActivityId", "UID", default=object_id)
+        item = dict(row)
+        item.update(
+            {
+                f"p6_udf:{title}": value
+                for title, value in udf_assignments.get(object_id, {}).items()
+            }
+        )
+        item.update(
+            {
+                "activity_id": code,
+                "activity_name": _ci(row, "task_name", "Name", "ActivityName", default=code),
+                "p6_object_id": object_id,
+                "p6_project_id": project.external_project_id,
+                "wbs_id": _ci(row, "wbs_id", "WBSObjectId", "WBSId"),
+                "calendar_id": _ci(row, "clndr_id", "CalendarObjectId", "CalendarId"),
+                "status": _ci(row, "status_code", "Status"),
+                "activity_type": _ci(row, "task_type", "Type", "ActivityType"),
+                "original_duration": _ci(row, "target_drtn_hr_cnt", "OriginalDuration"),
+                "remaining_duration": _ci(row, "remain_drtn_hr_cnt", "RemainingDuration"),
+                "actual_duration": _ci(row, "act_drtn_hr_cnt", "ActualDuration"),
+                "percent_complete": _ci(
+                    row, "phys_complete_pct", "PhysicalPercentComplete", "PercentComplete"
+                ),
+                "percent_complete_type": _ci(row, "complete_pct_type", "PercentCompleteType"),
+                "planned_start": _ci(row, "target_start_date", "PlannedStart", "Start"),
+                "planned_finish": _ci(row, "target_end_date", "PlannedFinish", "Finish"),
+                "actual_start": _ci(row, "act_start_date", "ActualStart"),
+                "actual_finish": _ci(row, "act_end_date", "ActualFinish"),
+                "early_start": _ci(row, "early_start_date", "EarlyStart"),
+                "early_finish": _ci(row, "early_end_date", "EarlyFinish"),
+                "late_start": _ci(row, "late_start_date", "LateStart"),
+                "late_finish": _ci(row, "late_end_date", "LateFinish"),
+                "forecast_finish": _ci(row, "expect_end_date", "ExpectedFinish"),
+                "total_float": _ci(row, "total_float_hr_cnt", "TotalFloat"),
+                "free_float": _ci(row, "free_float_hr_cnt", "FreeFloat"),
+                "constraint_type": _ci(row, "cstr_type", "PrimaryConstraintType", "ConstraintType"),
+                "constraint_date": _ci(row, "cstr_date", "PrimaryConstraintDate", "ConstraintDate"),
+                "secondary_constraint_type": _ci(row, "cstr_type2", "SecondaryConstraintType"),
+                "secondary_constraint_date": _ci(row, "cstr_date2", "SecondaryConstraintDate"),
+                "activity_codes": ";".join(
+                    f"P6_CODE_{i + 1}={value}"
+                    for i, value in enumerate(assigned.get(object_id, []))
+                ),
+                "_xer_table": "TASK" if "task_id" in row else "Activity",
+                "_source_row": row.get("_source_row", ""),
+            }
+        )
+        activities.append(item)
+    relationships = []
+    for row in project.relationships:
+        pred_object = _ci(row, "pred_task_id", "PredecessorActivityObjectId", "PredecessorUID")
+        succ_object = _ci(row, "task_id", "SuccessorActivityObjectId", "SuccessorUID")
+        relationships.append(
+            {
+                **row,
+                "predecessor_id": object_to_code.get(pred_object, pred_object),
+                "successor_id": object_to_code.get(succ_object, succ_object),
+                "relationship_type": _ci(row, "pred_type", "Type", default="FS"),
+                "lag": _ci(row, "lag_hr_cnt", "Lag", default="0"),
+                "p6_predecessor_object_id": pred_object,
+                "p6_successor_object_id": succ_object,
+                "_xer_table": "TASKPRED" if "pred_task_id" in row else "Relationship",
+                "_source_row": row.get("_source_row", ""),
+            }
+        )
+    return tuple(activities), tuple(relationships)

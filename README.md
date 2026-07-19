@@ -1,5 +1,7 @@
 # Brunel
 
+Brunel includes a production-oriented Primavera P6 Schedule Adapter foundation for safe XER and P6 XML discovery/import, explicit project mapping, immutable schedule-revision admission, external identity traceability, deterministic comparison, quality review, and human-approved test-transport exports with reconciliation. No Oracle API transport or autonomous P6 write is implemented. See [Primavera P6 Schedule Adapter](docs/primavera-p6-schedule-adapter.md).
+
 Brunel includes a canonical Integration Adapter Framework for capability-declared imports, immutable external evidence, normalized review proposals, explicitly approved idempotent exports, and reconciliation. See [Integration Adapter Framework](docs/integration-adapter-framework.md).
 
 Brunel includes Enterprise Project Intelligence for authorized portfolios, provenance-first historical metrics, human-reviewed lessons and identities, privacy-protected benchmarks, and explainable comparable-project analysis. See [Enterprise Project Intelligence](docs/enterprise-project-intelligence.md).
@@ -43,6 +45,7 @@ rfi/                   Evidence-backed RFI drafting, review, response, logs, and
 submittal/             Requirements, packages, attachment evidence, reviews, responses, procurement
 procurement/           Register, lead times, date plans, release guardrails, exposure, delivery
 schedule_intelligence/ Immutable revisions, quality, CPM evidence, lineage, schedule comparison
+p6_adapter/            P6 transport, safe parsing, discovery, mapping, and export guardrails
 field_intelligence/    Daily reports, reviewed field records, progress proposals, field dashboards
 tools/                 Safe capability contracts
 workflows/             Deterministic process orchestration contracts

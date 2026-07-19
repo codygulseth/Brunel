@@ -9,6 +9,7 @@ from integration_adapters.reference import (
 from integration_adapters.registry import AdapterRegistry
 from integration_adapters.repository import JsonIntegrationRepository
 from integration_adapters.service import IntegrationService
+from p6_adapter import PrimaveraP6Adapter
 
 COMMANDS = {"integration-adapters", "integration-connections", "integration-health"}
 
@@ -22,7 +23,12 @@ def register_integration_commands(commands):
 
 def run_integration_command(args: argparse.Namespace, settings: Settings) -> int:
     registry = AdapterRegistry()
-    for adapter in (LocalFileAdapter(), GenericJsonAdapter(), InMemoryWriteAdapter()):
+    for adapter in (
+        LocalFileAdapter(),
+        GenericJsonAdapter(),
+        InMemoryWriteAdapter(),
+        PrimaveraP6Adapter(),
+    ):
         registry.register(adapter)
     service = IntegrationService(
         JsonIntegrationRepository(settings.data_directory / "integrations"),
