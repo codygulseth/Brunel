@@ -42,6 +42,7 @@ from app.field_cli import COMMANDS as FIELD_COMMANDS, register_field_commands, r
 from app.risk_cli import COMMANDS as RISK_COMMANDS, register_risk_commands, run_risk_command
 from app.commissioning_cli import COMMANDS as COMMISSIONING_COMMANDS, register_commissioning_commands, run_commissioning_command
 from app.contract_cli import COMMANDS as CONTRACT_COMMANDS, register_contract_commands, run_contract_command
+from app.enterprise_cli import COMMANDS as ENTERPRISE_COMMANDS, register_enterprise_commands, run_enterprise_command
 from change_workflow.qa import OperationalQuestionService
 from change_workflow.repository import JsonChangeWorkflowRepository
 from revision_intelligence.alignment import BlockAlignmentService
@@ -134,6 +135,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_risk_commands(commands)
     register_commissioning_commands(commands)
     register_contract_commands(commands)
+    register_enterprise_commands(commands)
     return parser
 
 
@@ -178,6 +180,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_commissioning_command(args, settings)
     if args.command in CONTRACT_COMMANDS:
         return run_contract_command(args, settings)
+    if args.command in ENTERPRISE_COMMANDS:
+        return run_enterprise_command(args, settings)
     if args.command == "ingest":
         return _run_ingest(args, repository)
     if args.command == "search":
