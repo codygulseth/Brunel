@@ -24,6 +24,8 @@ Procurement Intelligence adds project-scoped candidate extraction/review, item a
 
 Schedule Intelligence adds immutable schedule import, revision/activity reads, quality analysis, criticality views, milestones, look-ahead, lineage review, deterministic comparison, workflow links, synchronization proposals, dashboard, register, and search. No schedule write-back endpoint exists; accepted synchronization proposals remain explicit human-reviewed proposals unless a separate canonical downstream command is invoked.
 
+Daily Reports and Field Intelligence adds project-day/report creation, local structured ingestion, immutable revisions, proposed observation review, deterministic draft/review/issue, field dashboards, search, and cited questions. It has no automatic schedule progress, workflow closure, external distribution, or contractual-impact endpoint.
+
 All workflow rules remain in `SubmittalService`. Missing records return 404, lifecycle conflicts return 409, and malformed requests return 422. Citation output keeps document/page/chunk identity but strips `source_location`. The API never uploads a package externally, sends a notification, calls a model by default, determines technical compliance, or releases procurement automatically. See [Submittal automation](submittal-automation.md).
 
 ## Submittal attachment intelligence routes

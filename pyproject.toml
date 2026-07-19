@@ -41,6 +41,7 @@ include = [
   "meeting_tracking*",
   "procurement*",
   "schedule_intelligence*",
+  "field_intelligence*",
 ]
 
 [tool.setuptools.package-data]
