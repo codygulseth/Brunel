@@ -24,6 +24,11 @@ class Capability(StrEnum):
     RECONCILE_EXPORT = "reconcile_export"
     RETRIEVE_EXTERNAL_RECORD = "retrieve_external_record"
     LIST_CHANGES = "list_changes_since_cursor"
+    IMPORT_XER = "import_xer"
+    IMPORT_P6_XML = "import_p6_xml"
+    API_READ = "api_read"
+    API_WRITE = "api_write"
+    SECURE_FILE_EXPORT = "secure_file_export"
 
 
 class ConnectionStatus(StrEnum):
@@ -177,6 +182,7 @@ class ImportSession(Frozen):
     requested_capability: Capability
     requested_scope: dict[str, str] = {}
     cursor_requested: str | None = None
+    cursor_pending: str | None = None
     cursor_committed: str | None = None
     started_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     completed_at: datetime | None = None

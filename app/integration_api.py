@@ -12,10 +12,16 @@ from integration_adapters.reference import (
 from integration_adapters.registry import AdapterRegistry
 from integration_adapters.repository import JsonIntegrationRepository
 from integration_adapters.service import IntegrationService
+from p6_adapter import PrimaveraP6Adapter
 
 router = APIRouter(prefix="/organizations/{organization_id}", tags=["integration-adapters"])
 _registry = AdapterRegistry()
-for _adapter in (LocalFileAdapter(), GenericJsonAdapter(), InMemoryWriteAdapter()):
+for _adapter in (
+    LocalFileAdapter(),
+    GenericJsonAdapter(),
+    InMemoryWriteAdapter(),
+    PrimaveraP6Adapter(),
+):
     _registry.register(_adapter)
 
 

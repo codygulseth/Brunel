@@ -39,6 +39,7 @@ The roadmap is capability-driven. Dates and priorities will be validated with co
 - Drawing and specification intelligence
 - Procurement Intelligence: evidence-backed register, lead-time history, date planning, release guardrails, exposure, delivery, and plan comparison (foundation implemented)
 - Schedule Intelligence Foundation: immutable imports, quality, CPM evidence, lineage, comparison, workflow proposals, and cited Q&A (foundation implemented)
+- Primavera P6 Schedule Adapter: safe XER/XML discovery and import, explicit mappings, immutable canonical revisions, versioned export proposals, deterministic test execution, reconciliation, API/CLI, dashboard, and cited Q&A (foundation implemented; production Oracle transports deferred)
 - Daily Reports and Field Intelligence: immutable reviewed reports, field records, schedule proposals, weekly summaries, and cited Q&A (foundation implemented)
 - Risk signals with evidence, confidence, and human disposition
 

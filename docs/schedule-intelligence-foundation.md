@@ -1,6 +1,6 @@
 # Schedule Intelligence Foundation
 
-Brunel preserves structured schedules as immutable, project-scoped revisions. CSV is the deterministic baseline; constrained synthetic Primavera/Microsoft-style XML and core `%T`/`%F`/`%R` XER tables are adapter foundations. Original fields, row/table identity, parser version, content hashes, and normalized values remain traceable.
+Brunel preserves structured schedules as immutable, project-scoped revisions. CSV is the deterministic baseline. The Primavera P6 adapter extends the canonical parser boundary with namespace-tolerant P6 XML and multi-table `%T`/`%F`/`%R` XER parsing. Original fields, row/table identity, parser version, content hashes, and normalized values remain traceable.
 
 Activities, milestones, relationships, lags, constraints, codes, source float, and source dates remain distinct from Brunel calculations. Quality assessment flags incomplete logic, calendars, dates, progress, constraints, duration, identity, and float without certifying the schedule. CPM runs only with interpretable durations, valid acyclic logic, and imported calendars or an explicit approximate calendar-day fallback. Brunel never claims P6 or Microsoft Project parity.
 

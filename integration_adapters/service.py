@@ -43,6 +43,21 @@ class IntegrationService:
             json.dumps(value, sort_keys=True, default=str, separators=(",", ":")).encode()
         ).hexdigest()
 
+    def _proposal_hash(self, proposal: ExportProposal) -> str:
+        return self._hash(
+            {
+                "capability": proposal.target_capability,
+                "source_type": proposal.brunel_source_type,
+                "source_id": proposal.brunel_source_id,
+                "target_record": proposal.target_external_record_id,
+                "action": proposal.proposed_action,
+                "fields": proposal.proposed_fields,
+                "evidence": proposal.evidence,
+                "rationale": proposal.human_rationale,
+                "expected_version": proposal.expected_external_version,
+            }
+        )
+
     def _audit(self, org, event, subject, actor="brunel", project=None, metadata=None):
         safe = {
             k: v
@@ -191,7 +206,17 @@ class IntegrationService:
         self._audit(org, f"connection_{status}", cid, actor, project)
         return updated
 
-    def import_records(self, org, project, cid, actor, *, scope=None, cursor=None):
+    def import_records(
+        self,
+        org,
+        project,
+        cid,
+        actor,
+        *,
+        scope=None,
+        cursor=None,
+        defer_domain_admission=False,
+    ):
         connection = self._connection(org, project, cid)
         self._authorize(connection, actor)
         if connection.status != ConnectionStatus.ACTIVE:
@@ -297,13 +322,18 @@ class IntegrationService:
             self._audit(org, "record_normalized", item.id, actor, project)
         completed = session.model_copy(
             update={
-                "status": "completed_with_review_items" if normalized else "completed",
-                "completed_at": datetime.now(UTC),
+                "status": "awaiting_domain_admission"
+                if defer_domain_admission
+                else "completed_with_review_items"
+                if normalized
+                else "completed",
+                "completed_at": None if defer_domain_admission else datetime.now(UTC),
                 "raw_records_received": len(payloads) - duplicates,
                 "records_normalized": len(normalized),
                 "records_requiring_review": len(normalized),
                 "duplicates": duplicates,
-                "cursor_committed": next_cursor,
+                "cursor_pending": next_cursor if defer_domain_admission else None,
+                "cursor_committed": None if defer_domain_admission else next_cursor,
             }
         )
         self.repository.save("sessions", sid, completed)
@@ -315,6 +345,26 @@ class IntegrationService:
             project,
         )
         return completed, tuple(normalized)
+
+    def finalize_domain_admission(self, org, project, session_id, actor, admitted_count):
+        session = self.repository.get("sessions", session_id, org, project)
+        if not session or session.status != "awaiting_domain_admission":
+            raise ValueError("Import session is not awaiting canonical domain admission")
+        completed = session.model_copy(
+            update={
+                "status": "completed",
+                "completed_at": datetime.now(UTC),
+                "cursor_committed": session.cursor_pending,
+                "cursor_pending": None,
+                "records_admitted": admitted_count,
+                "records_requiring_review": max(
+                    0, session.records_requiring_review - admitted_count
+                ),
+            }
+        )
+        self.repository.save("sessions", session_id, completed)
+        self._audit(org, "import_domain_admission_completed", session_id, actor, project)
+        return completed
 
     def confirm_mapping(self, org, project, normalized_id, brunel_type, brunel_id, actor):
         record = self.repository.get("normalized", normalized_id, org, project)
@@ -340,6 +390,11 @@ class IntegrationService:
             reviewer_disposition=f"confirmed by {actor}",
         )
         self.repository.save("mappings", mapping.id, mapping)
+        self.repository.save(
+            "normalized",
+            record.id,
+            record.model_copy(update={"status": "admitted", "admitted_record_id": brunel_id}),
+        )
         self._audit(org, "mapping_confirmation", mapping.id, actor, project)
         return mapping
 
@@ -375,6 +430,39 @@ class IntegrationService:
         )
         return conflict
 
+    def review_mapping(self, org, project, mapping_id, decision, actor):
+        mapping = self.repository.get("mappings", mapping_id, org, project)
+        if not mapping:
+            raise ValueError("External identity mapping not found")
+        connection = self._connection(org, project, mapping.connection_id)
+        self._authorize(connection, actor)
+        if decision not in {"confirm", "reject"}:
+            raise ValueError("Mapping decision must be confirm or reject")
+        updated = mapping.model_copy(
+            update={
+                "status": "confirmed" if decision == "confirm" else "rejected",
+                "confidence": 1 if decision == "confirm" else 0,
+                "reviewer_disposition": f"{decision}ed by {actor}",
+                "latest_seen": datetime.now(UTC),
+            }
+        )
+        self.repository.save("mappings", mapping_id, updated)
+        self._audit(org, f"mapping_{decision}", mapping_id, actor, project)
+        return updated
+
+    def review_conflict(self, org, project, conflict_id, disposition, actor):
+        conflict = self.repository.get("conflicts", conflict_id, org, project)
+        if not conflict:
+            raise ValueError("Integration conflict not found")
+        connection = self._connection(org, project, conflict.connection_id)
+        self._authorize(connection, actor)
+        if disposition not in {"acknowledged", "resolved", "dismissed"}:
+            raise ValueError("Unsupported integration conflict disposition")
+        updated = conflict.model_copy(update={"review_status": disposition})
+        self.repository.save("conflicts", conflict_id, updated)
+        self._audit(org, "integration_conflict_review", conflict_id, actor, project)
+        return updated
+
     def create_export_proposal(
         self,
         org,
@@ -392,9 +480,7 @@ class IntegrationService:
     ):
         connection = self._connection(org, project, cid)
         self._authorize(connection, actor)
-        payload_hash = self._hash(fields)
         pid = f"export_{uuid4().hex[:16]}"
-        key = self._hash((cid, capability, source_id, action, payload_hash))
         item = ExportProposal(
             id=pid,
             organization_id=org,
@@ -408,9 +494,16 @@ class IntegrationService:
             evidence=evidence,
             human_rationale=rationale,
             expected_external_version=expected_version,
-            payload_hash=payload_hash,
-            idempotency_key=key,
+            payload_hash="pending",
+            idempotency_key="pending",
             status=ExportStatus.VALIDATION_REQUIRED,
+        )
+        payload_hash = self._proposal_hash(item)
+        item = item.model_copy(
+            update={
+                "payload_hash": payload_hash,
+                "idempotency_key": self._hash((cid, capability, source_id, action, payload_hash)),
+            }
         )
         self.repository.save("proposals", pid, item)
         self._audit(org, "export_proposal_created", pid, actor, project)
@@ -435,6 +528,10 @@ class IntegrationService:
             errors.append("unsupported_write_capability")
         if not proposal.evidence:
             errors.append("source_evidence_required")
+        errors.extend(
+            adapter.validate_export_payload(proposal.proposed_fields, connection.configuration)
+        )
+        errors.extend(adapter.validate_export_context(proposal, connection, self.repository))
         status = ExportStatus.READY_FOR_REVIEW if not errors else ExportStatus.VALIDATION_REQUIRED
         updated = proposal.model_copy(update={"status": status, "validation_errors": tuple(errors)})
         self.repository.save("proposals", pid, updated)
@@ -461,6 +558,27 @@ class IntegrationService:
         self._audit(org, "export_approval", pid, actor, project)
         return updated
 
+    def reject_export(self, org, project, pid, actor, rationale):
+        proposal = self.repository.get("proposals", pid, org, project)
+        if not proposal or proposal.status not in {
+            ExportStatus.VALIDATION_REQUIRED,
+            ExportStatus.READY_FOR_REVIEW,
+            ExportStatus.APPROVED,
+        }:
+            raise ValueError("Reviewable export proposal required")
+        connection = self._connection(org, project, proposal.connection_id)
+        self._authorize(connection, actor, external_write=True)
+        updated = proposal.model_copy(
+            update={
+                "status": ExportStatus.REJECTED,
+                "reviewer": actor,
+                "approval_rationale": rationale,
+            }
+        )
+        self.repository.save("proposals", pid, updated)
+        self._audit(org, "export_rejection", pid, actor, project)
+        return updated
+
     def execute_export(self, org, project, pid, actor):
         proposal = self.repository.get("proposals", pid, org, project)
         if proposal:
@@ -480,10 +598,16 @@ class IntegrationService:
             raise ValueError("Explicitly approved export proposal required")
         if proposal.expires_at and proposal.expires_at <= datetime.now(UTC):
             raise ValueError("Export approval expired")
-        if proposal.approved_payload_hash != self._hash(proposal.proposed_fields):
+        if proposal.approved_payload_hash != self._proposal_hash(proposal):
             raise ValueError("Approval invalidated by payload change")
         connection = self._connection(org, project, proposal.connection_id)
         adapter = self.registry.get(connection.adapter_name)
+        if connection.status != ConnectionStatus.ACTIVE or not connection.write_enabled:
+            raise ValueError("Active explicitly write-enabled connection required")
+        errors = adapter.validate_export_payload(proposal.proposed_fields, connection.configuration)
+        errors += adapter.validate_export_context(proposal, connection, self.repository)
+        if errors:
+            raise ValueError("Export proposal is no longer valid: " + ", ".join(errors))
         adapter.require(Capability.EXECUTE_APPROVED_EXPORT)
         response = adapter.execute_approved_export(
             proposal.proposed_fields, proposal.idempotency_key, proposal.expected_external_version
@@ -520,9 +644,9 @@ class IntegrationService:
         execution = self.repository.get("executions", execution_id, org, project)
         if not proposal or not execution:
             raise ValueError("Proposal and execution required")
-        adapter = self.registry.get(
-            self._connection(org, project, proposal.connection_id).adapter_name
-        )
+        connection = self._connection(org, project, proposal.connection_id)
+        self._authorize(connection, actor, external_write=True)
+        adapter = self.registry.get(connection.adapter_name)
         actual = adapter.retrieve_external_record(execution.external_record_id)
         actual_fields = actual.get("fields", {})
         differences = {
