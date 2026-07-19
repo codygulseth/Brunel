@@ -44,6 +44,7 @@ include = [
   "field_intelligence*",
   "risk_intelligence*",
   "commissioning_intelligence*",
+  "contract_intelligence*",
 ]
 
 [tool.setuptools.package-data]
